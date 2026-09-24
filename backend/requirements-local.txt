@@ -1,0 +1,5 @@
+# Local development only (start.bat, scripts/start.sh): PostgreSQL 16 server binaries for the embedded
+# database driven by backend/scripts/local_db.py - no PostgreSQL installation, no Docker, no admin rights.
+# Wheels exist for Python 3.10-3.12 on Windows x64, macOS (Intel and Apple silicon) and Linux x86_64.
+# Not used by Docker, CI or production (they run a regular PostgreSQL server).
+pgserver==0.1.4

@@ -1,0 +1,25 @@
+# Build context of backend/Dockerfile is the repository root (the image needs backend/ and database/seed/).
+# Allow-list: send only those two folders to the Docker daemon, minus local and development-only files.
+# (frontend/Dockerfile uses frontend/ as its context and frontend/.dockerignore.)
+*
+!backend/
+!database/seed/
+
+backend/.venv/
+backend/tests/
+backend/scripts/
+backend/requirements-dev.txt
+backend/requirements-local.txt
+backend/Dockerfile
+backend/.gitignore
+backend/.pytest_cache/
+backend/.ruff_cache/
+backend/.mypy_cache/
+backend/htmlcov/
+backend/.coverage
+backend/.coverage.*
+backend/coverage.xml
+**/__pycache__/
+**/*.py[cod]
+**/.env
+**/.env.*

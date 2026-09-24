@@ -1,0 +1,1563 @@
+/**
+ * Test fixtures typed against the v2 API contract (src/types/api.ts), generated from
+ * database/seed/portfolio.json with the ids / defaults the API adds. Test data only.
+ */
+import type { Education, Experience, Portfolio, Profile, ProjectDetail, ProjectSummary, SkillCategory } from "@/types/api";
+
+export const profileFixture: Profile = {
+  "full_name": "Youssra Boubakri",
+  "headline": "Data Scientist | Data Engineer | Data Analyst",
+  "tagline": "Turning complex data into decision-ready intelligence.",
+  "summary": "Data Scientist with hands-on experience across the full data lifecycle — data engineering, statistical analysis, machine learning and applied AI. I design data pipelines, build and rigorously evaluate predictive models, and deliver NLP, computer-vision and LLM-powered applications that turn complex data into reliable, actionable insight.",
+  "about_who": "Master's graduate in Data Science & Intelligent Systems (Faculté Pluridisciplinaire de Nador), with a multidisciplinary foundation in business computing, computer systems engineering and mathematical & computer sciences — a path that combines the analytical rigour of data science with the delivery discipline of software engineering.",
+  "about_what": "I turn raw, heterogeneous data into decisions: cleaning and structuring datasets, uncovering patterns through statistical analysis, and building machine-learning models — from classical classifiers to deep learning, NLP, computer vision and locally hosted LLMs — while keeping results transparent for stakeholders through dashboards and reporting.",
+  "about_build": "End-to-end data products: processing pipelines, predictive models, multi-agent AI systems, interactive dashboards and web applications that bring data, machine-learning models and APIs together.",
+  "location": "Morocco",
+  "mobility": "Mobile across Morocco and open to international relocation — available to travel for full-time positions and internships.",
+  "email": "youssrabkr2002@gmail.com",
+  "phone": null,
+  "github_url": "https://github.com/youssra2450",
+  "linkedin_url": "https://www.linkedin.com/in/youssra-boubakri-a4390b25b/",
+  "photo_url": "/images/youssra-boubakri-800.webp",
+  "target_roles": [
+    "Data Scientist",
+    "Data Engineer",
+    "Data Analyst",
+    "Machine Learning Engineer",
+    "AI / Machine Learning",
+    "Data & Business Intelligence",
+    "AI Engineer"
+  ],
+  "languages": [
+    {
+      "name": "Arabic",
+      "level": "Native"
+    },
+    {
+      "name": "French",
+      "level": "Fluent (reading, writing, speaking)"
+    },
+    {
+      "name": "English",
+      "level": "Intermediate"
+    }
+  ],
+  "interests": [
+    "Travel",
+    "Cooking",
+    "Volunteering & community activities"
+  ],
+  "snapshot": [
+    {
+      "title": "Data Science & AI",
+      "items": [
+        "Machine Learning & Deep Learning",
+        "NLP & LLMs",
+        "Computer Vision",
+        "Metaheuristic Optimization"
+      ]
+    },
+    {
+      "title": "Data Engineering",
+      "items": [
+        "ETL Pipelines",
+        "Big Data (Spark, Hadoop)",
+        "Data Processing",
+        "SQL & NoSQL"
+      ]
+    },
+    {
+      "title": "Data Analytics & BI",
+      "items": [
+        "SQL",
+        "Power BI",
+        "Tableau",
+        "Reporting & KPIs"
+      ]
+    },
+    {
+      "title": "Software Engineering",
+      "items": [
+        "Python",
+        "FastAPI / Flask",
+        "React",
+        "REST APIs"
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "key": "analytics",
+      "title": "Data Analytics",
+      "description": "Exploratory analysis, KPI design and reporting that turn raw data into clear, defensible answers for decision-makers.",
+      "tools": [
+        "SQL",
+        "Pandas",
+        "NumPy",
+        "Excel",
+        "Statistics"
+      ]
+    },
+    {
+      "key": "ml",
+      "title": "Machine Learning",
+      "description": "Predictive models for classification and regression — from feature engineering to rigorous evaluation and model selection.",
+      "tools": [
+        "Scikit-learn",
+        "XGBoost",
+        "TensorFlow",
+        "PyTorch"
+      ]
+    },
+    {
+      "key": "engineering",
+      "title": "Data Engineering",
+      "description": "Reliable ETL pipelines and structured data workflows, including distributed processing with Spark and NoSQL storage.",
+      "tools": [
+        "Python",
+        "Spark",
+        "Hadoop",
+        "Cassandra",
+        "SQL"
+      ]
+    },
+    {
+      "key": "ai",
+      "title": "Artificial Intelligence",
+      "description": "NLP, Transformer-based translation, computer vision and LLM-powered applications — including multi-agent systems running local models.",
+      "tools": [
+        "Hugging Face",
+        "spaCy",
+        "OpenCV",
+        "Ollama"
+      ]
+    },
+    {
+      "key": "bi",
+      "title": "Business Intelligence",
+      "description": "Decision-support dashboards in Power BI and Tableau that make performance measurable and actionable.",
+      "tools": [
+        "Power BI",
+        "Tableau",
+        "Excel",
+        "SQL"
+      ]
+    },
+    {
+      "key": "apps",
+      "title": "Data Applications",
+      "description": "Web applications that bring data, machine-learning models and APIs together into usable, well-engineered products.",
+      "tools": [
+        "Flask",
+        "FastAPI",
+        "Streamlit",
+        "React"
+      ]
+    }
+  ],
+  "contact_form_enabled": false,
+  "updated_at": "2026-09-22T00:00:00Z"
+};
+
+export const educationFixture: Education[] = [
+  {
+    "id": 1,
+    "degree": "Master's Degree — Data Science & Intelligent Systems",
+    "degree_original": "Master en Sciences des Données et Systèmes Intelligents",
+    "institution": "Faculté Pluridisciplinaire de Nador",
+    "location": "Nador, Morocco",
+    "start_year": 2024,
+    "end_year": 2026,
+    "status": "completed",
+    "description": "Advanced programme in data science, machine learning, artificial intelligence and intelligent systems (SDSI).",
+    "display_order": 1
+  },
+  {
+    "id": 2,
+    "degree": "Bachelor's Degree — Mathematical & Computer Sciences",
+    "degree_original": "Licence Fondamentale – Sciences Mathématiques et Informatiques",
+    "institution": "Faculté Pluridisciplinaire de Nador",
+    "location": "Nador, Morocco",
+    "start_year": 2023,
+    "end_year": 2024,
+    "status": "completed",
+    "description": null,
+    "display_order": 2
+  },
+  {
+    "id": 3,
+    "degree": "Bachelor's Degree — Computer Systems Engineering",
+    "degree_original": "Licence en Ingénierie des Systèmes Informatiques",
+    "institution": "École SupMTI",
+    "location": "Rabat, Morocco",
+    "start_year": 2022,
+    "end_year": 2023,
+    "status": "completed",
+    "description": null,
+    "display_order": 3
+  },
+  {
+    "id": 4,
+    "degree": "University Diploma of Technology — Business Computing",
+    "degree_original": "Diplôme Universitaire de Technologie en Informatique de Gestion",
+    "institution": "École Supérieure de Technologie",
+    "location": "Oujda, Morocco",
+    "start_year": 2020,
+    "end_year": 2022,
+    "status": "completed",
+    "description": null,
+    "display_order": 4
+  },
+  {
+    "id": 5,
+    "degree": "Baccalaureate — Physical Sciences",
+    "degree_original": "Baccalauréat – Sciences Physiques",
+    "institution": "Lycée Abdel Karim El Khattabi",
+    "location": "Nador, Morocco",
+    "start_year": 2019,
+    "end_year": 2020,
+    "status": "completed",
+    "description": null,
+    "display_order": 5
+  }
+];
+
+export const experienceFixture: Experience[] = [
+  {
+    "id": 1,
+    "organization": "CDG",
+    "location": "Rabat, Morocco",
+    "employment_type": "Internship",
+    "role": null,
+    "start_date": "2023-05-01",
+    "end_date": "2023-07-01",
+    "project_title": "IT Incident Management Application",
+    "description": "Designed and developed a centralised application to monitor and steer Run Factory operations, in line with ITIL best practices for IT incident management.",
+    "highlights": [],
+    "technologies": [],
+    "display_order": 1
+  },
+  {
+    "id": 2,
+    "organization": "Fx Pro",
+    "location": "Nador, Morocco",
+    "employment_type": "Internship",
+    "role": null,
+    "start_date": "2022-04-01",
+    "end_date": "2022-06-01",
+    "project_title": "Intern Management Application",
+    "description": "Designed and developed an application centralising intern follow-up and training-data reporting.",
+    "highlights": [],
+    "technologies": [],
+    "display_order": 2
+  },
+  {
+    "id": 3,
+    "organization": "G-TEC",
+    "location": "Nador, Morocco",
+    "employment_type": "Internship",
+    "role": null,
+    "start_date": "2021-07-01",
+    "end_date": "2021-08-01",
+    "project_title": "Stock Management Application",
+    "description": "Built a stock management application covering product inflows and outflows, with automated inventory tracking.",
+    "highlights": [],
+    "technologies": [],
+    "display_order": 3
+  }
+];
+
+export const skillsFixture: SkillCategory[] = [
+  {
+    "id": 1,
+    "slug": "data-analysis-bi",
+    "name": "Data Analysis & BI",
+    "description": "Querying, cleaning and analysing data, then reporting it for decision-making.",
+    "icon": "bar-chart",
+    "display_order": 1,
+    "skills": [
+      {
+        "id": 1,
+        "category_id": 1,
+        "name": "SQL",
+        "proficiency": null,
+        "is_core": true,
+        "display_order": 0
+      },
+      {
+        "id": 2,
+        "category_id": 1,
+        "name": "MySQL",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 1
+      },
+      {
+        "id": 3,
+        "category_id": 1,
+        "name": "Oracle",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 2
+      },
+      {
+        "id": 4,
+        "category_id": 1,
+        "name": "SQL Server",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 3
+      },
+      {
+        "id": 5,
+        "category_id": 1,
+        "name": "PL/SQL",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 4
+      },
+      {
+        "id": 6,
+        "category_id": 1,
+        "name": "Pandas",
+        "proficiency": null,
+        "is_core": true,
+        "display_order": 5
+      },
+      {
+        "id": 7,
+        "category_id": 1,
+        "name": "NumPy",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 6
+      },
+      {
+        "id": 8,
+        "category_id": 1,
+        "name": "Power BI",
+        "proficiency": null,
+        "is_core": true,
+        "display_order": 7
+      },
+      {
+        "id": 9,
+        "category_id": 1,
+        "name": "Tableau",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 8
+      },
+      {
+        "id": 10,
+        "category_id": 1,
+        "name": "Advanced Excel",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 9
+      },
+      {
+        "id": 11,
+        "category_id": 1,
+        "name": "Statistical Analysis",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 10
+      },
+      {
+        "id": 12,
+        "category_id": 1,
+        "name": "Data Cleaning",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 11
+      },
+      {
+        "id": 13,
+        "category_id": 1,
+        "name": "Data Preprocessing",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 12
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "slug": "data-science-ml",
+    "name": "Data Science & Machine Learning",
+    "description": "Building, training and evaluating predictive models.",
+    "icon": "brain",
+    "display_order": 2,
+    "skills": [
+      {
+        "id": 14,
+        "category_id": 2,
+        "name": "Python",
+        "proficiency": "advanced",
+        "is_core": true,
+        "display_order": 0
+      },
+      {
+        "id": 15,
+        "category_id": 2,
+        "name": "Scikit-learn",
+        "proficiency": null,
+        "is_core": true,
+        "display_order": 1
+      },
+      {
+        "id": 16,
+        "category_id": 2,
+        "name": "TensorFlow",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 2
+      },
+      {
+        "id": 17,
+        "category_id": 2,
+        "name": "PyTorch",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 3
+      },
+      {
+        "id": 18,
+        "category_id": 2,
+        "name": "XGBoost",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 4
+      },
+      {
+        "id": 19,
+        "category_id": 2,
+        "name": "Classification",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 5
+      },
+      {
+        "id": 20,
+        "category_id": 2,
+        "name": "Regression",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 6
+      },
+      {
+        "id": 21,
+        "category_id": 2,
+        "name": "Supervised Learning",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 7
+      },
+      {
+        "id": 22,
+        "category_id": 2,
+        "name": "Unsupervised Learning",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 8
+      },
+      {
+        "id": 23,
+        "category_id": 2,
+        "name": "Neural Networks",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 9
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "slug": "nlp",
+    "name": "Natural Language Processing",
+    "description": "Processing and modelling text, from preprocessing to transformer models.",
+    "icon": "message-square",
+    "display_order": 3,
+    "skills": [
+      {
+        "id": 24,
+        "category_id": 3,
+        "name": "NLTK",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 0
+      },
+      {
+        "id": 25,
+        "category_id": 3,
+        "name": "spaCy",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 1
+      },
+      {
+        "id": 26,
+        "category_id": 3,
+        "name": "HuggingFace",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 2
+      },
+      {
+        "id": 27,
+        "category_id": 3,
+        "name": "NLP Pipelines",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "slug": "big-data",
+    "name": "Big Data",
+    "description": "Distributed storage and processing of large or streaming datasets.",
+    "icon": "server",
+    "display_order": 4,
+    "skills": [
+      {
+        "id": 28,
+        "category_id": 4,
+        "name": "Hadoop",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 0
+      },
+      {
+        "id": 29,
+        "category_id": 4,
+        "name": "Apache Spark",
+        "proficiency": null,
+        "is_core": true,
+        "display_order": 1
+      },
+      {
+        "id": 30,
+        "category_id": 4,
+        "name": "Spark Streaming",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 2
+      },
+      {
+        "id": 31,
+        "category_id": 4,
+        "name": "Cassandra",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "slug": "programming",
+    "name": "Programming & Web",
+    "description": "Languages and frameworks used to build data applications and APIs.",
+    "icon": "code",
+    "display_order": 5,
+    "skills": [
+      {
+        "id": 32,
+        "category_id": 5,
+        "name": "Python",
+        "proficiency": "advanced",
+        "is_core": true,
+        "display_order": 0
+      },
+      {
+        "id": 33,
+        "category_id": 5,
+        "name": "R",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 1
+      },
+      {
+        "id": 34,
+        "category_id": 5,
+        "name": "Java",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 2
+      },
+      {
+        "id": 35,
+        "category_id": 5,
+        "name": "C",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 3
+      },
+      {
+        "id": 36,
+        "category_id": 5,
+        "name": "PHP",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 4
+      },
+      {
+        "id": 37,
+        "category_id": 5,
+        "name": "Laravel",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 5
+      },
+      {
+        "id": 38,
+        "category_id": 5,
+        "name": "JavaScript",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 6
+      },
+      {
+        "id": 39,
+        "category_id": 5,
+        "name": "HTML",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 7
+      },
+      {
+        "id": 40,
+        "category_id": 5,
+        "name": "CSS",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 8
+      },
+      {
+        "id": 41,
+        "category_id": 5,
+        "name": "Bootstrap",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 9
+      },
+      {
+        "id": 42,
+        "category_id": 5,
+        "name": "Flask",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 10
+      },
+      {
+        "id": 43,
+        "category_id": 5,
+        "name": "React",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 11
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "slug": "data-visualization",
+    "name": "Data Visualization",
+    "description": "Communicating insights through charts and interactive dashboards.",
+    "icon": "pie-chart",
+    "display_order": 6,
+    "skills": [
+      {
+        "id": 44,
+        "category_id": 6,
+        "name": "Matplotlib",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 0
+      },
+      {
+        "id": 45,
+        "category_id": 6,
+        "name": "Seaborn",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 1
+      },
+      {
+        "id": 46,
+        "category_id": 6,
+        "name": "Tableau",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 2
+      },
+      {
+        "id": 47,
+        "category_id": 6,
+        "name": "Power BI",
+        "proficiency": null,
+        "is_core": true,
+        "display_order": 3
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "slug": "databases",
+    "name": "Databases & Data Systems",
+    "description": "Relational and distributed databases for storing and serving data.",
+    "icon": "database",
+    "display_order": 7,
+    "skills": [
+      {
+        "id": 48,
+        "category_id": 7,
+        "name": "MySQL",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 0
+      },
+      {
+        "id": 49,
+        "category_id": 7,
+        "name": "Oracle",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 1
+      },
+      {
+        "id": 50,
+        "category_id": 7,
+        "name": "SQL Server",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 2
+      },
+      {
+        "id": 51,
+        "category_id": 7,
+        "name": "PL/SQL",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 3
+      },
+      {
+        "id": 52,
+        "category_id": 7,
+        "name": "Cassandra",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 4
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "slug": "modeling-design",
+    "name": "Modeling & Design",
+    "description": "Designing information systems and data models before implementation.",
+    "icon": "shapes",
+    "display_order": 8,
+    "skills": [
+      {
+        "id": 53,
+        "category_id": 8,
+        "name": "UML",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 0
+      },
+      {
+        "id": 54,
+        "category_id": 8,
+        "name": "Merise",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 1
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "slug": "tools",
+    "name": "Tools & Environments",
+    "description": "Day-to-day development, experimentation and virtualisation tooling.",
+    "icon": "wrench",
+    "display_order": 9,
+    "skills": [
+      {
+        "id": 55,
+        "category_id": 9,
+        "name": "Git",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 0
+      },
+      {
+        "id": 56,
+        "category_id": 9,
+        "name": "Jupyter Notebook",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 1
+      },
+      {
+        "id": 57,
+        "category_id": 9,
+        "name": "Linux",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 2
+      },
+      {
+        "id": 58,
+        "category_id": 9,
+        "name": "Windows",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 3
+      },
+      {
+        "id": 59,
+        "category_id": 9,
+        "name": "VMware",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 4
+      },
+      {
+        "id": 60,
+        "category_id": 9,
+        "name": "VirtualBox",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 5
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "slug": "project-management",
+    "name": "Project Management",
+    "description": "Methodologies used to plan and deliver projects.",
+    "icon": "kanban",
+    "display_order": 10,
+    "skills": [
+      {
+        "id": 61,
+        "category_id": 10,
+        "name": "Scrum",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 0
+      },
+      {
+        "id": 62,
+        "category_id": 10,
+        "name": "Kanban",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 1
+      },
+      {
+        "id": 63,
+        "category_id": 10,
+        "name": "Sprint Planning",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 2
+      },
+      {
+        "id": 64,
+        "category_id": 10,
+        "name": "V-Model (Cycle en V)",
+        "proficiency": null,
+        "is_core": false,
+        "display_order": 3
+      }
+    ]
+  }
+];
+
+export const projectDetailsFixture: ProjectDetail[] = [
+  {
+    "id": 1,
+    "slug": "ai-technology-watch-system",
+    "title": "AI Research Trend Analysis & Prediction from arXiv using a Multi-Agent System",
+    "title_original": "Système de veille technologique en IA",
+    "category": "Multi-Agent AI · NLP · Time Series",
+    "domains": [
+      "Data Science",
+      "AI/ML",
+      "NLP",
+      "LLM"
+    ],
+    "concepts": [
+      "Multi-agent system",
+      "Topic modeling",
+      "Time-series forecasting",
+      "Local LLM",
+      "Data engineering",
+      "Decision support"
+    ],
+    "visual": "multi-agent",
+    "context": "Master SDSI project",
+    "period_label": "2025–2026",
+    "start_year": 2025,
+    "end_year": 2026,
+    "summary": "Intelligent technology-monitoring system that automatically collects, analyses, maps and predicts the evolution of artificial intelligence research topics from arXiv publications.",
+    "technologies": [
+      "Python",
+      "arXiv API",
+      "Pandas",
+      "LDA",
+      "BERTopic",
+      "Sentence-BERT",
+      "UMAP",
+      "HDBSCAN",
+      "PELT",
+      "ARIMA",
+      "Llama 3.2",
+      "Ollama",
+      "TensorFlow",
+      "Streamlit"
+    ],
+    "features": [
+      "arXiv data collection & cleaning",
+      "Topic modeling (LDA + BERTopic)",
+      "Trend-break detection (PELT)",
+      "Emergence score",
+      "Trend forecasting (ARIMA)",
+      "Local LLM reports (Llama 3.2)",
+      "Interactive Streamlit dashboard",
+      "Structured CSV export"
+    ],
+    "github_url": "https://github.com/youssra2450/projet-pfe-veille-ia",
+    "demo_url": null,
+    "featured": true,
+    "display_order": 1,
+    "problem": "The volume of AI research grows too fast to follow manually, which makes it hard to see which topics are emerging, when a trend shifts, and where it is heading.",
+    "solution": "A multi-agent system combining NLP, topic modeling, time-series analysis, predictive modeling and a local LLM: four specialised agents collect and clean arXiv publications, map research topics, detect trend breaks and forecast their evolution, then synthesise the findings into narrative reports — all explored through an interactive Streamlit dashboard.",
+    "architecture": [
+      {
+        "step": "Agent 1 — Data Collection & Cleaning",
+        "description": "Collects metadata and abstracts from the arXiv API; tokenization, lemmatization, stop-word removal, deduplication and data cleaning."
+      },
+      {
+        "step": "Agent 2 — Topic Modeling",
+        "description": "LDA probabilistic topic modeling (10 macro-topics) combined with BERTopic on Sentence-BERT embeddings, UMAP and HDBSCAN."
+      },
+      {
+        "step": "Agent 3 — Temporal Analysis & Prediction",
+        "description": "Weekly time series per topic, trend-break detection with PELT, emergence score and forecasting with statistical models including ARIMA."
+      },
+      {
+        "step": "Agent 4 — Local LLM Synthesis",
+        "description": "Llama 3.2 running locally through Ollama generates narrative reports, interpretations, strategic recommendations and a global robustness indicator."
+      },
+      {
+        "step": "Export & Dashboard",
+        "description": "Structured CSV export and an interactive Streamlit dashboard with dynamic visualisations, KPIs and decision-support tools."
+      }
+    ],
+    "implementation": [
+      "Agent 1 collects metadata and abstracts from the arXiv API, then applies tokenization, lemmatization, stop-word removal, deduplication and data cleaning.",
+      "Agent 2 combines LDA probabilistic topic modeling (10 macro-topics) with BERTopic built on Sentence-BERT embeddings, UMAP dimensionality reduction and HDBSCAN clustering.",
+      "Agent 3 builds weekly time series per topic, detects trend breaks with PELT, computes an emergence score and forecasts trends with statistical models including ARIMA.",
+      "Agent 4 uses the local Llama 3.2 model through Ollama to generate automated narrative reports, interpretations and strategic recommendations, and computes a global robustness indicator.",
+      "Results are exported as structured CSV data and explored in an interactive Streamlit dashboard with dynamic visualisations, KPIs and decision-support tools."
+    ],
+    "results": [
+      "Corpus of approximately 15,887 arXiv scientific articles collected, cleaned and deduplicated.",
+      "10 LDA macro-topics and approximately 1,276 specialised semantic topics detected with BERTopic.",
+      "Automated narrative reports with interpretations, strategic recommendations and a global robustness indicator.",
+      "Interactive Streamlit dashboard with dynamic visualisations, KPIs and decision-support tools."
+    ],
+    "lessons_learned": [],
+    "updated_at": "2026-09-22T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "slug": "biometric-face-authentication",
+    "title": "Secure Biometric Authentication using Face Recognition & Hybrid Cryptography",
+    "title_original": "Authentification biométrique par reconnaissance faciale",
+    "category": "Computer Vision · Deep Learning · Cybersecurity",
+    "domains": [
+      "AI/ML",
+      "Computer Vision"
+    ],
+    "concepts": [
+      "Face recognition",
+      "Deep learning embeddings",
+      "Hybrid cryptography",
+      "Cybersecurity"
+    ],
+    "visual": "biometric",
+    "context": "Security project",
+    "period_label": "2024",
+    "start_year": 2024,
+    "end_year": 2024,
+    "summary": "Secure biometric authentication system based on ArcFace facial recognition, combined with hybrid cryptography (AES + RSA) to protect the storage of facial embeddings.",
+    "technologies": [
+      "Python",
+      "TensorFlow",
+      "ArcFace",
+      "OpenCV",
+      "Flask",
+      "AES",
+      "RSA"
+    ],
+    "features": [
+      "Face detection and recognition",
+      "ArcFace facial embeddings",
+      "Secure biometric authentication",
+      "AES embedding encryption",
+      "RSA key management",
+      "Encrypted embedding storage",
+      "Real-time verification"
+    ],
+    "github_url": null,
+    "demo_url": null,
+    "featured": true,
+    "display_order": 2,
+    "problem": "Authenticating users by their face requires reliable identity matching while keeping biometric data — which cannot be changed if leaked — protected.",
+    "solution": "An authentication system that detects faces, generates highly discriminative facial embeddings with ArcFace and protects their storage with hybrid cryptography — AES symmetric encryption for the embeddings and RSA asymmetric encryption for secure key management — with real-time verification served by a Flask application.",
+    "architecture": [
+      {
+        "step": "Face detection",
+        "description": "Faces detected and processed with OpenCV."
+      },
+      {
+        "step": "ArcFace embeddings",
+        "description": "Highly discriminative facial embeddings generated with ArcFace (TensorFlow)."
+      },
+      {
+        "step": "AES encryption",
+        "description": "Facial embeddings protected with AES symmetric encryption."
+      },
+      {
+        "step": "RSA key management",
+        "description": "RSA asymmetric encryption used for secure key management."
+      },
+      {
+        "step": "Encrypted storage",
+        "description": "Embeddings stored in encrypted form."
+      },
+      {
+        "step": "Real-time verification",
+        "description": "Embeddings compared in real time to authenticate the user through a Flask application."
+      }
+    ],
+    "implementation": [
+      "Face detection and image processing with OpenCV.",
+      "Facial embedding extraction with ArcFace (TensorFlow).",
+      "Hybrid cryptography: AES encryption protects the embeddings, RSA handles secure key management.",
+      "Encrypted storage of the facial embeddings.",
+      "Real-time verification integrated into a Flask application."
+    ],
+    "results": [
+      "Working authentication flow combining facial recognition and encrypted biometric storage."
+    ],
+    "lessons_learned": [],
+    "updated_at": "2026-09-22T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "slug": "automatic-document-translation",
+    "title": "Automatic Document Translation using NLP & Transformer",
+    "title_original": "LLM Generator Translator",
+    "category": "NLP · Transformers · Web Application",
+    "domains": [
+      "AI/ML",
+      "NLP"
+    ],
+    "concepts": [
+      "Neural machine translation",
+      "Transformer encoder–decoder",
+      "Pre-trained model, no fine-tuning",
+      "Document processing"
+    ],
+    "visual": "document",
+    "context": null,
+    "period_label": null,
+    "start_year": null,
+    "end_year": null,
+    "summary": "Streamlit web application that translates PDF and DOCX documents between multiple languages with a pre-trained Transformer model (Helsinki-NLP MarianMT) and exports the result in Word and PDF formats.",
+    "technologies": [
+      "Python",
+      "Streamlit",
+      "Hugging Face Transformers",
+      "MarianMT",
+      "Helsinki-NLP",
+      "pdfplumber",
+      "python-docx",
+      "ReportLab"
+    ],
+    "features": [
+      "Upload PDF and DOCX documents",
+      "Automatic text extraction",
+      "Source and target language selection",
+      "Transformer encoder–decoder translation",
+      "Batch processing for long documents",
+      "Translated DOCX and PDF generation",
+      "Interactive Streamlit interface"
+    ],
+    "github_url": null,
+    "demo_url": null,
+    "featured": true,
+    "display_order": 3,
+    "problem": "Academic and technical documents often need to be read in another language, and translating them by hand is slow — especially when the result must be delivered back as a usable Word or PDF document.",
+    "solution": "A Python + Streamlit application: users upload a PDF or DOCX document, its content is extracted and translated between the selected languages by a pre-trained Transformer-based neural machine translation model from Helsinki-NLP (MarianMT), and the translated document is generated in DOCX and PDF formats. It relies on a specialised pre-trained NLP translation model rather than a general-purpose LLM such as GPT, so no fine-tuning is required. Use cases: academic and technical document translation, NLP experimentation, Transformer architecture demonstration and AI / Data Science education.",
+    "architecture": [
+      {
+        "step": "Document",
+        "description": "PDF or DOCX file uploaded through the Streamlit interface."
+      },
+      {
+        "step": "Text extraction",
+        "description": "Content extracted from PDF (pdfplumber) and DOCX (python-docx) files."
+      },
+      {
+        "step": "Tokenization",
+        "description": "Text tokenized for the MarianMT model with Hugging Face Transformers."
+      },
+      {
+        "step": "Transformer translation",
+        "description": "Encoder–decoder neural machine translation with a pre-trained Helsinki-NLP MarianMT model, with batch processing for long documents."
+      },
+      {
+        "step": "Decoding",
+        "description": "Model outputs decoded back into translated text."
+      },
+      {
+        "step": "DOCX / PDF generation",
+        "description": "Translated document generated in Word (python-docx) and PDF (ReportLab) formats."
+      }
+    ],
+    "implementation": [
+      "Streamlit interface for document upload, source and target language selection, and download.",
+      "Text extraction from PDF (pdfplumber) and DOCX (python-docx) documents.",
+      "Tokenization and translation with Hugging Face Transformers and a pre-trained Helsinki-NLP MarianMT model (Transformer encoder–decoder architecture).",
+      "Batch processing to handle long documents.",
+      "Automatic generation of the translated document in DOCX (python-docx) and PDF (ReportLab)."
+    ],
+    "results": [],
+    "lessons_learned": [],
+    "updated_at": "2026-09-22T00:00:00Z"
+  },
+  {
+    "id": 4,
+    "slug": "breast-cancer-classification",
+    "title": "Breast Cancer Classification — Benign vs Malignant",
+    "title_original": null,
+    "category": "Machine Learning · Healthcare",
+    "domains": [
+      "Data Science",
+      "AI/ML"
+    ],
+    "concepts": [
+      "Binary classification",
+      "Feature engineering",
+      "Model evaluation",
+      "Data visualization",
+      "Medical AI"
+    ],
+    "visual": "medical",
+    "context": null,
+    "period_label": null,
+    "start_year": null,
+    "end_year": null,
+    "summary": "Machine learning classification system that predicts whether a breast cancer case is benign or malignant from clinical and/or diagnostic features.",
+    "technologies": [
+      "Python",
+      "Pandas",
+      "NumPy",
+      "Scikit-learn"
+    ],
+    "features": [
+      "Binary classification",
+      "Data preprocessing",
+      "Exploratory analysis",
+      "Feature engineering",
+      "Model training & evaluation",
+      "Performance analysis",
+      "Benign vs malignant prediction"
+    ],
+    "github_url": null,
+    "demo_url": null,
+    "featured": true,
+    "display_order": 4,
+    "problem": "Predicting whether a breast cancer case is benign or malignant from clinical and diagnostic features is a binary classification problem in which careful data preparation and rigorous evaluation are essential.",
+    "solution": "A complete machine learning workflow — data preprocessing, exploratory analysis, feature preparation, model training, evaluation and prediction — built in Python with Pandas, NumPy and Scikit-learn.",
+    "architecture": [
+      {
+        "step": "Clinical & diagnostic data",
+        "description": "Features describing each breast cancer case."
+      },
+      {
+        "step": "Preprocessing",
+        "description": "Data cleaning and preparation with Pandas and NumPy."
+      },
+      {
+        "step": "Exploratory analysis",
+        "description": "Exploration and visualisation of the features."
+      },
+      {
+        "step": "Feature engineering",
+        "description": "Preparation of the features used by the models."
+      },
+      {
+        "step": "Training & evaluation",
+        "description": "Model training, evaluation and performance analysis with Scikit-learn."
+      },
+      {
+        "step": "Prediction",
+        "description": "Classification of cases as benign or malignant."
+      }
+    ],
+    "implementation": [
+      "Data preprocessing with Pandas and NumPy.",
+      "Exploratory data analysis and data visualisation.",
+      "Feature engineering and preparation.",
+      "Model training and evaluation with Scikit-learn.",
+      "Performance analysis and prediction of benign vs malignant cases."
+    ],
+    "results": [],
+    "lessons_learned": [],
+    "updated_at": "2026-09-22T00:00:00Z"
+  },
+  {
+    "id": 5,
+    "slug": "tsp-uav-optimization",
+    "title": "TSP-UAV Optimization using GWO, Cuckoo Search & Tabu Search",
+    "title_original": null,
+    "category": "Optimization · Metaheuristics · IoT",
+    "domains": [
+      "Optimization"
+    ],
+    "concepts": [
+      "Metaheuristics",
+      "UAV trajectory planning",
+      "IoT",
+      "Algorithm comparison",
+      "Data visualization"
+    ],
+    "visual": "uav",
+    "context": null,
+    "period_label": null,
+    "start_year": null,
+    "end_year": null,
+    "summary": "Implementation and visualisation of the Travelling Salesman Problem applied to an Unmanned Aerial Vehicle (UAV) in an IoT context, comparing metaheuristic algorithms to find efficient UAV trajectories.",
+    "technologies": [
+      "Grey Wolf Optimizer",
+      "Cuckoo Search",
+      "Tabu Search"
+    ],
+    "features": [
+      "Grey Wolf Optimizer (GWO)",
+      "Cuckoo Search (CS)",
+      "Tabu Search (TS)",
+      "Random trajectory generation",
+      "Algorithm comparison",
+      "Trajectory visualisation"
+    ],
+    "github_url": "https://github.com/farahbanhakeia/TSP-UAV-Optimization-Algorithms-GWO-CS-TS-",
+    "demo_url": null,
+    "featured": true,
+    "display_order": 5,
+    "problem": "A UAV that has to visit a set of IoT nodes needs an efficient trajectory. Choosing the visiting order is a Travelling Salesman Problem, whose number of possible tours grows factorially with the number of nodes.",
+    "solution": "Several metaheuristic optimisation algorithms — Grey Wolf Optimizer (GWO), Cuckoo Search (CS) and Tabu Search (TS) — are implemented and compared with random trajectory generation, and the resulting UAV trajectories are visualised.",
+    "architecture": [
+      {
+        "step": "IoT nodes",
+        "description": "Set of nodes the UAV must visit."
+      },
+      {
+        "step": "Random trajectories",
+        "description": "Random trajectory generation for comparison."
+      },
+      {
+        "step": "Metaheuristic optimisation",
+        "description": "Grey Wolf Optimizer, Cuckoo Search and Tabu Search search for efficient tours."
+      },
+      {
+        "step": "Algorithm comparison",
+        "description": "The trajectories found by each algorithm are compared."
+      },
+      {
+        "step": "Visualisation",
+        "description": "UAV trajectories, nodes and optimisation paths are visualised."
+      }
+    ],
+    "implementation": [
+      "UAV trajectory planning over IoT nodes modelled as a Travelling Salesman Problem.",
+      "Grey Wolf Optimizer (GWO).",
+      "Cuckoo Search (CS).",
+      "Tabu Search (TS).",
+      "Random trajectory generation for comparison.",
+      "Comparison and visualisation of the trajectories produced by each algorithm."
+    ],
+    "results": [],
+    "lessons_learned": [],
+    "updated_at": "2026-09-22T00:00:00Z"
+  },
+  {
+    "id": 6,
+    "slug": "breast-cancer-detection",
+    "title": "Breast Cancer Detection",
+    "title_original": "Détection du cancer du sein",
+    "category": "Machine Learning · Healthcare",
+    "domains": [
+      "Data Science",
+      "AI/ML"
+    ],
+    "concepts": [
+      "BI-RADS data",
+      "Classification",
+      "Decision support",
+      "Web application"
+    ],
+    "visual": "medical",
+    "context": "Digital health project",
+    "period_label": "2024",
+    "start_year": 2024,
+    "end_year": 2024,
+    "summary": "Diagnosis-support system based on BI-RADS data, with a classification model and a Flask web application.",
+    "technologies": [
+      "Python",
+      "Scikit-learn",
+      "Decision Tree",
+      "Flask",
+      "MySQL"
+    ],
+    "features": [
+      "Classification",
+      "Data processing",
+      "Predictive model",
+      "Web application",
+      "MySQL integration"
+    ],
+    "github_url": null,
+    "demo_url": null,
+    "featured": true,
+    "display_order": 6,
+    "problem": "Interpreting BI-RADS assessment data consistently is demanding; a decision-support tool can help structure the analysis.",
+    "solution": "A classification model (Decision Tree) trained on BI-RADS data and exposed through a Flask web application connected to a MySQL database.",
+    "architecture": [
+      {
+        "step": "BI-RADS data",
+        "description": "Structured assessment data used as input."
+      },
+      {
+        "step": "Data processing",
+        "description": "Preparation of the data for modeling."
+      },
+      {
+        "step": "Classification",
+        "description": "Decision Tree model built with Scikit-learn."
+      },
+      {
+        "step": "Web application",
+        "description": "Predictions served through a Flask application."
+      },
+      {
+        "step": "Storage",
+        "description": "Application data stored in MySQL."
+      }
+    ],
+    "implementation": [
+      "Data processing of BI-RADS data.",
+      "Decision Tree classification model with Scikit-learn.",
+      "Flask web application for diagnosis support.",
+      "MySQL database connection."
+    ],
+    "results": [
+      "Diagnosis-support web application integrating a trained classification model and a MySQL database."
+    ],
+    "lessons_learned": [],
+    "updated_at": "2026-09-22T00:00:00Z"
+  },
+  {
+    "id": 7,
+    "slug": "visual-content-moderation",
+    "title": "Visual Content Moderation",
+    "title_original": "Modération de contenu visuel",
+    "category": "Computer Vision",
+    "domains": [
+      "AI/ML",
+      "Computer Vision"
+    ],
+    "concepts": [
+      "Object detection",
+      "Annotated dataset",
+      "Content moderation",
+      "Deep learning"
+    ],
+    "visual": "vision",
+    "context": "Computer Vision project",
+    "period_label": "2024",
+    "start_year": 2024,
+    "end_year": 2024,
+    "summary": "Automatic detection of inappropriate images with an SSD object-detection model.",
+    "technologies": [
+      "Python",
+      "Keras",
+      "SSD",
+      "OpenCV"
+    ],
+    "features": [
+      "Annotated dataset creation",
+      "Computer vision",
+      "Automatic detection",
+      "Moderation pipeline"
+    ],
+    "github_url": null,
+    "demo_url": null,
+    "featured": false,
+    "display_order": 7,
+    "problem": "Platforms that accept user images need to detect inappropriate content automatically instead of relying only on manual review.",
+    "solution": "An SSD-based detection model trained on a purpose-built annotated dataset and integrated into an automated moderation pipeline.",
+    "architecture": [
+      {
+        "step": "Dataset creation",
+        "description": "Annotated image dataset built for the task."
+      },
+      {
+        "step": "Model training",
+        "description": "SSD detection model built with Keras."
+      },
+      {
+        "step": "Detection",
+        "description": "Inappropriate content detected in incoming images (OpenCV)."
+      },
+      {
+        "step": "Moderation pipeline",
+        "description": "Detections integrated into an automated moderation flow."
+      }
+    ],
+    "implementation": [
+      "Creation of an annotated image dataset.",
+      "SSD object-detection model implemented with Keras.",
+      "Image processing with OpenCV.",
+      "Integration into an automated moderation pipeline."
+    ],
+    "results": [
+      "Automated moderation pipeline built around an SSD detection model and a custom annotated dataset."
+    ],
+    "lessons_learned": [],
+    "updated_at": "2026-09-22T00:00:00Z"
+  },
+  {
+    "id": 8,
+    "slug": "intelligent-pdf-translation",
+    "title": "Intelligent PDF Translation",
+    "title_original": "Traduction intelligente de PDF",
+    "category": "NLP · Web Application",
+    "domains": [
+      "AI/ML",
+      "NLP"
+    ],
+    "concepts": [
+      "OCR",
+      "Machine translation",
+      "Layout preservation",
+      "Web application"
+    ],
+    "visual": "document",
+    "context": "NLP project",
+    "period_label": "2024",
+    "start_year": 2024,
+    "end_year": 2024,
+    "summary": "Web application that automatically translates multi-page PDF documents while preserving their layout.",
+    "technologies": [
+      "React",
+      "FastAPI",
+      "HuggingFace",
+      "Tesseract"
+    ],
+    "features": [
+      "PDF upload",
+      "OCR",
+      "NLP",
+      "Automatic translation",
+      "Multi-page processing",
+      "Layout preservation"
+    ],
+    "github_url": null,
+    "demo_url": null,
+    "featured": false,
+    "display_order": 8,
+    "problem": "Translating PDF documents usually breaks their layout, and multi-page or scanned documents add text-extraction challenges.",
+    "solution": "A React + FastAPI application that extracts text with OCR (Tesseract), translates it with HuggingFace models through an NLP pipeline and rebuilds multi-page documents with their original layout.",
+    "architecture": [
+      {
+        "step": "PDF upload",
+        "description": "Documents uploaded from a React interface."
+      },
+      {
+        "step": "Text extraction",
+        "description": "OCR with Tesseract."
+      },
+      {
+        "step": "Translation",
+        "description": "NLP pipeline with HuggingFace models."
+      },
+      {
+        "step": "Layout preservation",
+        "description": "Translated content placed back into the original page layout."
+      },
+      {
+        "step": "API",
+        "description": "Processing orchestrated by a FastAPI backend."
+      }
+    ],
+    "implementation": [
+      "React front end for uploading and retrieving documents.",
+      "FastAPI backend orchestrating the processing.",
+      "OCR text extraction with Tesseract.",
+      "Machine translation with HuggingFace models.",
+      "Multi-page processing with layout preservation."
+    ],
+    "results": [
+      "Web application translating multi-page PDF documents while keeping their layout."
+    ],
+    "lessons_learned": [],
+    "updated_at": "2026-09-22T00:00:00Z"
+  }
+];
+
+/** The `ProjectSummary` view of a detail (what GET /api/portfolio returns per project). */
+export function toSummary(project: ProjectDetail): ProjectSummary {
+  const {
+    problem: _problem,
+    solution: _solution,
+    architecture: _architecture,
+    implementation: _implementation,
+    results: _results,
+    lessons_learned: _lessons,
+    updated_at: _updated,
+    ...summary
+  } = project;
+  return summary;
+}
+
+export const projectsFixture: ProjectSummary[] = projectDetailsFixture.map(toSummary);
+
+export function projectFixture(slug: string): ProjectDetail {
+  const project = projectDetailsFixture.find((item) => item.slug === slug);
+  if (!project) throw new Error(`Unknown project fixture: ${slug}`);
+  return project;
+}
+
+export function portfolioFixture(profile: Partial<Profile> = {}): Portfolio {
+  return {
+    profile: { ...profileFixture, ...profile },
+    education: educationFixture,
+    experience: experienceFixture,
+    skills: skillsFixture,
+    projects: projectsFixture,
+  };
+}

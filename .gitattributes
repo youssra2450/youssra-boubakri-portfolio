@@ -1,0 +1,26 @@
+# Normalise line endings in the repository (LF), with explicit exceptions for Windows scripts.
+* text=auto eol=lf
+
+# Windows launchers: cmd.exe needs CRLF (labels and goto break with LF); PowerShell files keep CRLF too.
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# POSIX shell scripts must stay LF, even when checked out on Windows.
+*.sh    text eol=lf
+
+# Binary assets
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+
+# Generated lock files: no textual diffs in reviews
+package-lock.json -diff linguist-generated=true

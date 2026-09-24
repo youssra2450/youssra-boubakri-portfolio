@@ -1,0 +1,78 @@
+[project]
+name = "portfolio-api"
+version = "1.0.0"
+description = "REST API powering Youssra Boubakri's professional portfolio (FastAPI + PostgreSQL)."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+filterwarnings = [
+    # Any warning raised by our own code or tests is a bug.
+    "error",
+    # Third-party deprecations raised inside starlette.testclient (pinned versions, not our code):
+    # Starlette 1.x recommends the `httpx2` fork, and it still uses an anyio alias deprecated in 4.15.
+    "ignore:Using .httpx. with .starlette.testclient. is deprecated:UserWarning",
+    "ignore:The anyio.abc.BlockingPortal alias is deprecated:DeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+    "\\.\\.\\.$",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+src = ["app", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
+    "C4",   # flake8-comprehensions
+    "N",    # pep8-naming
+    "RET",  # flake8-return
+    "PT",   # flake8-pytest-style
+    "S",    # flake8-bandit (security)
+    "T20",  # no stray print()
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    "RUF001",  # ambiguous unicode (typographic dashes are intentional in copy)
+    "RUF002",
+    "RUF003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "S101",  # assert is the point of tests
+    "S105",  # hard-coded test credentials
+    "S106",
+    "S107",
+    "S311",
+]
+"alembic/versions/*" = ["N999"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path", "fastapi.Header"]
+
+[tool.ruff.format]
+quote-style = "double"

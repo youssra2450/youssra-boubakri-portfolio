@@ -1,0 +1,901 @@
+@import "tailwindcss";
+
+/* Self-hosted fonts (latin subsets) — no third-party font requests */
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource-variable/manrope/wght.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";
+@import "./projects.css";
+
+/* ---------------------------------------------------------------------------
+ * Design tokens (docs/SPEC.md §3.2). Tailwind v4 exposes each token as a
+ * utility: bg-ivory, bg-sand, bg-sky-50, text-ink, border-line, text-accent, ...
+ * ------------------------------------------------------------------------- */
+@theme {
+  /* Palette v4 — LIGHT THEME (docs/SPEC.md §3.2): surfaces are white / ivory / sand (beige) / sky (light blue)
+   * only. navy-* tokens are kept for text and fine line-art — never as a background surface. */
+  --color-ivory: #fbf8f3;
+  --color-sand: #f3ede3;
+  --color-sand-200: #e8dfd0;
+  --color-sand-400: #cdbb9e;
+  --color-sky-50: #f3f7fd;
+  --color-sky-100: #e6effb;
+  --color-sky-200: #cfe0f6;
+
+  --color-navy-950: #0b1830;
+  --color-navy-900: #13223f;
+  --color-navy-800: #1c3157;
+  --color-navy-700: #274372;
+  --color-navy-600: #3a5a8f;
+
+  --color-ink: #13223f;
+  --color-slate-600: #4b5670;
+  --color-slate-400: #8990a0;
+  --color-line: #e3e6ec;
+  --color-mist: #f3f7fd;
+
+  --color-accent: #2e6bcb;
+  --color-accent-strong: #22539f;
+  --color-accent-soft: #8db6ea;
+  --color-accent-tint: #eaf1fb;
+
+  --color-success: #1f8a5b;
+  --color-success-strong: #17694a;
+  --color-danger: #c2413a;
+  --color-warning: #b7791f;
+
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Manrope Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-card: 12px;
+  --radius-media: 20px;
+
+  /* Warm, soft elevation (ink-tinted, never grey-black). */
+  --shadow-soft: 0 1px 2px rgb(19 34 63 / 0.04), 0 12px 32px -16px rgb(19 34 63 / 0.14);
+  --shadow-lift: 0 1px 2px rgb(19 34 63 / 0.05), 0 20px 44px -18px rgb(19 34 63 / 0.22);
+  --shadow-media: 0 1px 2px rgb(19 34 63 / 0.06), 0 32px 64px -32px rgb(19 34 63 / 0.38);
+  --shadow-glass: 0 1px 2px rgb(19 34 63 / 0.05), 0 18px 40px -18px rgb(19 34 63 / 0.3);
+  --shadow-accent: 0 1px 2px rgb(19 34 63 / 0.08), 0 10px 24px -12px rgb(46 107 203 / 0.6);
+
+  /* Type scale: display (hero h1) and section h2 */
+  --text-display: clamp(2.7rem, 5.4vw, 4.6rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.035em;
+  --text-h2: clamp(1.95rem, 3.2vw, 2.75rem);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.025em;
+
+  /* Motion v3 — shared easing curves (docs/SPEC.md §3.2). */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* One-shot entrance animations (never looping) */
+  --animate-sheet-in: sheet-in 320ms var(--ease-out-soft);
+  --animate-fade-in: fade-in 240ms ease-out;
+  --animate-route-in: route-in 260ms var(--ease-out-soft) both;
+
+  @keyframes sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes route-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Motion v3 durations — plain custom properties shared by the CSS below. */
+:root {
+  --motion-fast: 180ms;
+  --motion-base: 280ms;
+  --motion-slow: 760ms;
+  --motion-stagger: 80ms;
+}
+
+/* Mono uppercase label used for eyebrows ("01 — About") and small technical captions. */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Horizontal chip rows on phones scroll without showing a scrollbar. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+    background-color: var(--color-ivory);
+  }
+
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    font-size: 16px;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+    /* Safety net: decorative layers must never create horizontal scrolling (clip keeps position: sticky working). */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-ink;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: rgb(46 107 203 / 0.18);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    /* Final state instantly: no duration, no delay, no loop. */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* =========================================================================
+   * Scroll reveal — `.is-visible` is added by useInView (components/ui/Reveal).
+   * Variants via data-reveal: fade-up (default) · fade-in · scale-in · slide-left · mask.
+   * Without IntersectionObserver the hook reports "visible" immediately.
+   * ====================================================================== */
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+    transition:
+      opacity var(--motion-slow) var(--ease-out-soft),
+      transform var(--motion-slow) var(--ease-out-soft),
+      clip-path 900ms var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal[data-reveal="fade-in"] {
+    transform: none;
+  }
+
+  .reveal[data-reveal="scale-in"] {
+    transform: scale(0.97);
+  }
+
+  .reveal[data-reveal="slide-left"] {
+    transform: translate3d(-18px, 0, 0);
+  }
+
+  .reveal[data-reveal="mask"] {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 100% 0);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .reveal[data-reveal="mask"].is-visible {
+    clip-path: inset(-24px -24px -48px -24px);
+  }
+
+  /* Children staggered inside a revealed parent (`--i` = child index). */
+  .reveal-children > * {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+    transition:
+      opacity 520ms var(--ease-out-soft),
+      transform 520ms var(--ease-out-soft);
+    transition-delay: calc(var(--reveal-delay, 0ms) + 140ms + min(var(--i, 0), 18) * 28ms);
+  }
+
+  .is-visible .reveal-children > *,
+  .is-visible.reveal-children > * {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* =========================================================================
+   * Section headings — eyebrow line draws, words rise out of a mask, lead fades.
+   * ====================================================================== */
+  .word-mask {
+    display: inline-block;
+    vertical-align: top;
+    overflow-x: visible;
+    overflow-y: clip;
+    /* Keep descenders (g, y, p) inside the clipping box. */
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+
+  .word-mask__inner {
+    display: inline-block;
+    will-change: transform;
+  }
+
+  .heading-reveal .word-mask__inner {
+    transform: translate3d(0, 108%, 0);
+    transition: transform 900ms var(--ease-out-soft);
+    transition-delay: calc(120ms + var(--w, 0) * 45ms);
+  }
+
+  .heading-reveal .heading-reveal__block {
+    display: block;
+    clip-path: inset(0 0 100% 0);
+    transform: translate3d(0, 12px, 0);
+    transition:
+      clip-path 900ms var(--ease-out-soft),
+      transform 900ms var(--ease-out-soft);
+    transition-delay: 120ms;
+  }
+
+  .heading-reveal .heading-reveal__line {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 700ms var(--ease-out-soft);
+  }
+
+  .heading-reveal .heading-reveal__index,
+  .heading-reveal .heading-reveal__label {
+    opacity: 0;
+    transition: opacity 500ms var(--ease-out-soft);
+  }
+
+  .heading-reveal .heading-reveal__label {
+    transition-delay: 220ms;
+  }
+
+  .heading-reveal .heading-reveal__lead {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+    transition:
+      opacity 800ms var(--ease-out-soft),
+      transform 800ms var(--ease-out-soft);
+    transition-delay: 380ms;
+  }
+
+  .heading-reveal.is-visible .word-mask__inner,
+  .heading-reveal.is-visible .heading-reveal__lead {
+    transform: none;
+    opacity: 1;
+  }
+
+  .heading-reveal.is-visible .heading-reveal__block {
+    transform: none;
+    clip-path: inset(-12px -12px -24px -12px);
+  }
+
+  .heading-reveal.is-visible .heading-reveal__line {
+    transform: scaleX(1);
+  }
+
+  .heading-reveal.is-visible .heading-reveal__index,
+  .heading-reveal.is-visible .heading-reveal__label {
+    opacity: 1;
+  }
+
+  /* =========================================================================
+   * Hero entrance (≈ 1.2 s, runs once on mount) — staggered via `--i`.
+   * ====================================================================== */
+  .hero-in {
+    animation: hero-rise 820ms var(--ease-out-soft) both;
+    animation-delay: calc(90ms + var(--i, 0) * var(--motion-stagger));
+  }
+
+  .hero-name .word-mask__inner {
+    animation: mask-up 980ms var(--ease-out-soft) both;
+    animation-delay: calc(170ms + var(--w, 0) * 90ms);
+  }
+
+  .hero-portrait-frame {
+    animation: portrait-in 1150ms var(--ease-out-soft) 220ms both;
+  }
+
+  .hero-portrait-img {
+    animation: portrait-settle 1600ms var(--ease-out-soft) 220ms both;
+  }
+
+  .hero-glass {
+    animation: glass-in 820ms var(--ease-out-soft) 1050ms both;
+  }
+
+  /* Network motif around the portrait: strokes draw in, nodes appear, 2–3 nodes breathe. */
+  .motif-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-line 1300ms var(--ease-out-soft) forwards;
+    animation-delay: calc(420ms + var(--i, 0) * 70ms);
+  }
+
+  .motif-fade {
+    animation: fade-in-soft 1200ms var(--ease-out-soft) both;
+    animation-delay: calc(500ms + var(--i, 0) * 70ms);
+  }
+
+  .motif-node {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: node-in 700ms var(--ease-spring) both;
+    animation-delay: calc(700ms + var(--i, 0) * 60ms);
+  }
+
+  /* Ambient loops: only while their section is on screen (`data-ambient="on"`). */
+  .ambient-drift {
+    animation: glow-drift 26s var(--ease-in-out-soft) infinite alternate;
+    animation-play-state: paused;
+  }
+
+  .breathe {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: breathe 4.8s var(--ease-in-out-soft) infinite;
+    animation-delay: calc(1.6s + var(--i, 0) * 1.1s);
+    animation-play-state: paused;
+  }
+
+  [data-ambient="on"] .ambient-drift,
+  [data-ambient="on"] .breathe {
+    animation-play-state: running;
+  }
+
+  /* Rotating role word: vertical slide + fade; all words share one grid cell (no layout shift). */
+  .rotator {
+    display: inline-grid;
+    vertical-align: bottom;
+    overflow-y: clip;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+  }
+
+  .rotator > span {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+    transition:
+      transform 640ms var(--ease-out-soft),
+      opacity 420ms var(--ease-out-soft);
+  }
+
+  .rotator > span[data-state="active"] {
+    transform: none;
+    opacity: 1;
+  }
+
+  .rotator > span[data-state="leaving"] {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
+  }
+
+  .rotator-tick {
+    transition:
+      width 480ms var(--ease-out-soft),
+      background-color 480ms var(--ease-out-soft);
+  }
+
+  /* =========================================================================
+   * Timelines (Experience / Education): the spine draws with scroll
+   * (`--progress` written by useScrollLinkedProgress), dots pop in.
+   * ====================================================================== */
+  .timeline-fill {
+    transform-origin: top center;
+    transform: scaleY(var(--progress, 0));
+    transition: transform 120ms linear;
+  }
+
+  .timeline-dot {
+    transform: scale(0.6);
+    opacity: 0.35;
+    transition:
+      transform 560ms var(--ease-spring),
+      opacity 400ms var(--ease-out-soft),
+      background-color 400ms var(--ease-out-soft);
+    transition-delay: calc(var(--reveal-delay, 0ms) + 120ms);
+  }
+
+  .is-visible > .timeline-dot,
+  .is-visible .timeline-dot {
+    transform: none;
+    opacity: 1;
+  }
+
+  /* =========================================================================
+   * Capability icons draw their strokes once when the card is revealed.
+   * ====================================================================== */
+  .is-visible .icon-draw :is(path, line, polyline, polygon, circle, rect, ellipse) {
+    stroke-dasharray: 160;
+    animation: icon-draw 1400ms var(--ease-out-soft) both;
+    animation-delay: calc(var(--reveal-delay, 0ms) + 200ms);
+  }
+
+  /* =========================================================================
+   * Cursor-following soft spotlight (fine pointers only) — --spot-x / --spot-y
+   * are written by lib/motion.ts `trackSpotlight`.
+   * ====================================================================== */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .spotlight::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      380px circle at var(--spot-x, 50%) var(--spot-y, 0%),
+      rgb(46 107 203 / 0.085),
+      transparent 62%
+    );
+    opacity: 0;
+    transition: opacity 320ms var(--ease-out-soft);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .spotlight:hover::after {
+      opacity: 1;
+    }
+  }
+
+  /* =========================================================================
+   * Architecture — stages light up in sequence, packets travel along connectors
+   * only while the diagram is on screen (`data-flow="on"`).
+   * ====================================================================== */
+  /* Base colours live here (not in utilities) so the lit state below can override them. */
+  .stage-card {
+    border: 1px solid var(--color-sky-200);
+    transition:
+      border-color 600ms var(--ease-out-soft),
+      box-shadow 600ms var(--ease-out-soft),
+      translate 220ms var(--ease-out-soft);
+    transition-delay: calc(var(--i, 0) * 140ms);
+  }
+
+  .stage-card:hover {
+    transition-delay: 0ms;
+  }
+
+  .stage-icon {
+    border: 1px solid var(--color-sky-200);
+    background-color: var(--color-sky-50);
+    color: var(--color-accent-strong);
+  }
+
+  .stage-index {
+    color: var(--color-slate-600);
+  }
+
+  .stage-icon,
+  .stage-index {
+    transition:
+      background-color 600ms var(--ease-out-soft),
+      color 600ms var(--ease-out-soft),
+      border-color 600ms var(--ease-out-soft);
+    transition-delay: calc(var(--i, 0) * 140ms);
+  }
+
+  [data-lit="true"] .stage-card {
+    border-color: rgb(46 107 203 / 0.26);
+  }
+
+  [data-lit="true"] .stage-icon {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: #fff;
+  }
+
+  [data-lit="true"] .stage-index {
+    color: var(--color-accent-strong);
+  }
+
+  [data-lit="true"] .stage-card::before {
+    animation: stage-glow 1100ms var(--ease-out-soft) both;
+    animation-delay: calc(var(--i, 0) * 140ms);
+  }
+
+  .stage-card::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: 0 0 0 0 rgb(46 107 203 / 0);
+  }
+
+  .flow-packet {
+    opacity: 0;
+    animation-duration: var(--flow-cycle, 3.6s);
+    animation-timing-function: var(--ease-in-out-soft);
+    animation-iteration-count: infinite;
+    animation-delay: calc(var(--i, 0) * var(--flow-step, 0.45s));
+    animation-play-state: paused;
+    animation-fill-mode: both;
+  }
+
+  .flow-packet[data-axis="x"] {
+    animation-name: packet-x;
+  }
+
+  .flow-packet[data-axis="y"] {
+    animation-name: packet-y;
+  }
+
+  .flow-packet[data-axis="x"][data-slots="3"] {
+    animation-name: packet-x-3;
+  }
+
+  .flow-packet[data-axis="y"][data-slots="3"] {
+    animation-name: packet-y-3;
+  }
+
+  .flow-dash {
+    animation: dash-march 1.6s linear infinite;
+    animation-play-state: paused;
+  }
+
+  [data-flow="on"] .flow-packet,
+  [data-flow="on"] .flow-dash {
+    animation-play-state: running;
+  }
+
+  /* Status dot that pulses once, slowly (health pill, "open to opportunities"). */
+  .status-ping {
+    position: relative;
+  }
+
+  .status-ping::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0;
+  }
+
+  /* One slow pulse, once the dot's block has been revealed. */
+  .is-visible .status-ping::after {
+    animation: status-ping 2.4s var(--ease-out-soft) 600ms 1;
+  }
+
+  /* Mobile menu links: staggered entrance. */
+  .menu-item-in {
+    animation: menu-item-in 520ms var(--ease-out-soft) both;
+    animation-delay: calc(80ms + var(--i, 0) * 45ms);
+  }
+
+  /* Header scroll-progress bar (value written by usePageScrollProgress). */
+  .scroll-progress {
+    transform-origin: left center;
+    transform: scaleX(var(--scroll-progress, 0));
+  }
+
+  /* Sliding active indicator of the primary navigation. */
+  .nav-indicator[data-ready="true"] {
+    transition:
+      transform 420ms var(--ease-out-soft),
+      width 420ms var(--ease-out-soft),
+      opacity 240ms var(--ease-out-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal[data-reveal] {
+      opacity: 1;
+      transform: none;
+      clip-path: none;
+    }
+
+    .reveal-children > *,
+    .heading-reveal .heading-reveal__index,
+    .heading-reveal .heading-reveal__label,
+    .heading-reveal .heading-reveal__lead {
+      opacity: 1;
+      transform: none;
+    }
+
+    .heading-reveal .word-mask__inner,
+    .heading-reveal .heading-reveal__block {
+      transform: none;
+      clip-path: none;
+    }
+
+    .heading-reveal .heading-reveal__line {
+      transform: none;
+    }
+
+    .timeline-dot {
+      transform: none;
+      opacity: 1;
+    }
+
+    .motif-line {
+      stroke-dashoffset: 0;
+    }
+
+    .ambient-drift,
+    .breathe,
+    .flow-packet,
+    .flow-dash,
+    .status-ping::after {
+      animation: none;
+    }
+
+    .flow-packet {
+      display: none;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Keyframes (Motion v3). Only transform / opacity / clip-path / stroke-dashoffset.
+ * ------------------------------------------------------------------------- */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes mask-up {
+  from {
+    transform: translate3d(0, 110%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes portrait-in {
+  from {
+    opacity: 0;
+    clip-path: inset(10% 6% 4% 6% round 24px);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-40px -40px -80px -40px round 24px);
+  }
+}
+
+@keyframes portrait-settle {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes glass-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-18px, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-in-soft {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes node-in {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+
+@keyframes glow-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-5%, 4%, 0) scale(1.07);
+  }
+  100% {
+    transform: translate3d(4%, -3%, 0) scale(0.96);
+  }
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.55);
+    opacity: 0.55;
+  }
+}
+
+@keyframes icon-draw {
+  from {
+    stroke-dashoffset: 160;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes stage-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgb(46 107 203 / 0);
+  }
+  35% {
+    box-shadow: 0 0 0 6px rgb(46 107 203 / 0.14);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgb(46 107 203 / 0);
+  }
+}
+
+/* 8 slots per cycle (7 connectors + a pause): travel during the first slot only. */
+@keyframes packet-x {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  2% {
+    opacity: 1;
+  }
+  11% {
+    opacity: 1;
+  }
+  12.5%,
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--packet-distance, 24px), 0, 0);
+  }
+}
+
+@keyframes packet-y {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  2% {
+    opacity: 1;
+  }
+  11% {
+    opacity: 1;
+  }
+  12.5%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, var(--packet-distance, 24px), 0);
+  }
+}
+
+/* 3 slots per cycle (2 connectors + a pause). */
+@keyframes packet-x-3 {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  5% {
+    opacity: 1;
+  }
+  29% {
+    opacity: 1;
+  }
+  33.3%,
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--packet-distance, 24px), 0, 0);
+  }
+}
+
+@keyframes packet-y-3 {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  5% {
+    opacity: 1;
+  }
+  29% {
+    opacity: 1;
+  }
+  33.3%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, var(--packet-distance, 24px), 0);
+  }
+}
+
+@keyframes dash-march {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+@keyframes status-ping {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@keyframes menu-item-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

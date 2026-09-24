@@ -1,0 +1,13 @@
+{
+  "name": "Youssra Boubakri — Data Scientist",
+  "short_name": "Y. Boubakri",
+  "description": "Portfolio of Youssra Boubakri — Data Scientist | Data Engineer | Data Analyst",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#FBF8F3",
+  "theme_color": "#2E6BCB",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

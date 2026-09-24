@@ -1,0 +1,13 @@
+# Build context of frontend/Dockerfile. Dependencies are installed inside the image (npm ci) and the
+# build output is produced there, so local folders and environment files are never sent.
+node_modules/
+dist/
+coverage/
+.vite/
+*.tsbuildinfo
+*.log
+.env
+.env.*
+!.env.example
+Dockerfile
+.dockerignore

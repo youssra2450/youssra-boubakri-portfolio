@@ -1,0 +1,487 @@
+/* Projects experience (docs/SPEC.md §3.4–3.5 · Palette v4 · Motion v3) — imported by index.css.
+ * Light theme only: covers sit on sky / ivory surfaces with accent + ink line-art. Every animation is
+ * one-shot, uses transform / opacity / stroke-dashoffset only and is skipped under reduced motion.
+ * Nothing is hidden unless JavaScript has confirmed it will reveal it (data-* flags set by React). */
+@layer components {
+  /* -------------------------------------------------------------------------
+   * Project covers (features/project/ProjectVisual.tsx): light tone surface,
+   * a hairline grid fading towards the edges, line-art SVG on top.
+   * ----------------------------------------------------------------------- */
+  .project-visual {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-color: var(--color-sky-50);
+  }
+
+  .project-visual::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(to right, var(--pv-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--pv-grid) 1px, transparent 1px);
+    background-size: 18px 18px;
+    background-position: center;
+    mask-image: radial-gradient(80% 85% at 50% 50%, #000 30%, transparent 100%);
+  }
+
+  .project-visual[data-tone="sky"] {
+    --pv-grid: rgb(46 107 203 / 0.075);
+    background:
+      radial-gradient(60% 75% at 50% 45%, rgb(255 255 255 / 0.95), transparent 72%),
+      radial-gradient(55% 70% at 100% 0%, rgb(207 224 246 / 0.75), transparent 70%),
+      var(--color-sky-50);
+  }
+
+  .project-visual[data-tone="ivory"] {
+    --pv-grid: rgb(160 132 92 / 0.1);
+    background:
+      radial-gradient(60% 75% at 50% 45%, rgb(255 255 255 / 0.95), transparent 72%),
+      radial-gradient(55% 70% at 0% 100%, rgb(230 239 251 / 0.9), transparent 70%),
+      var(--color-ivory);
+  }
+
+  /* Soft elevation for panels drawn inside a cover (cards, pages, shield). */
+  .pv-shadow {
+    filter: drop-shadow(0 1px 1px rgb(19 34 63 / 0.05)) drop-shadow(0 6px 10px rgb(19 34 63 / 0.07));
+  }
+
+  /* Hidden at rest, shown only while a one-shot animation runs. */
+  .pv-halo,
+  .pv-scan-x,
+  .pv-scan-y {
+    opacity: 0;
+  }
+
+  .project-visual > svg {
+    transition: scale 700ms var(--ease-out-soft);
+  }
+
+  /* -------------------------------------------------------------------------
+   * Projects grid: staggered reveal on first view, short fade/translate after
+   * a filter change (the <ul> is re-keyed per filter).
+   * ----------------------------------------------------------------------- */
+  .projects-grid .project-item {
+    transition:
+      opacity 700ms var(--ease-out-soft),
+      transform 700ms var(--ease-out-soft);
+    transition-delay: var(--item-delay, 0ms);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .projects-grid[data-revealed="false"] .project-item {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+
+    .projects-grid[data-filtered="true"] .project-item {
+      animation: project-filter-in 280ms var(--ease-out-soft) both;
+      animation-delay: calc(var(--item-index, 0) * 40ms);
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+   * Project cards: lift, accent border, deeper shadow and a cursor-following
+   * soft spotlight (fill + border glow) on fine pointers / keyboard focus.
+   * `--spot-x` / `--spot-y` are written by ProjectCard on pointermove.
+   * ----------------------------------------------------------------------- */
+  .project-card {
+    --spot-x: 50%;
+    --spot-y: 0%;
+    transition:
+      translate 280ms var(--ease-out-soft),
+      box-shadow 280ms var(--ease-out-soft),
+      border-color 280ms var(--ease-out-soft);
+  }
+
+  .project-card::before,
+  .project-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 320ms var(--ease-out-soft);
+  }
+
+  .project-card::before {
+    background: radial-gradient(560px circle at var(--spot-x) var(--spot-y), rgb(46 107 203 / 0.07), transparent 45%);
+  }
+
+  .project-card::after {
+    z-index: 3;
+    padding: 1px;
+    background: radial-gradient(340px circle at var(--spot-x) var(--spot-y), rgb(46 107 203 / 0.6), transparent 62%);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+  }
+
+  /* Hover / focus border + shadow live outside the layer (end of file) so they beat the card's
+   * `border-*` / `shadow-*` utilities. */
+
+  /* One-shot cover animation the first time a card is seen (any pointer). */
+  @media (prefers-reduced-motion: no-preference) {
+    .project-card[data-intro="play"] .pv-draw {
+      animation: pv-draw-intro 1300ms var(--ease-out-soft) both;
+      animation-delay: calc(var(--intro-delay, 0ms) + var(--pv-delay, 0ms));
+    }
+
+    .project-card[data-intro="play"] .pv-ping {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: pv-ping-intro 700ms var(--ease-out-soft) both;
+      animation-delay: calc(var(--intro-delay, 0ms) + var(--pv-delay, 0ms));
+    }
+
+    .project-card[data-intro="play"] .pv-grow {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation: pv-grow-intro 800ms var(--ease-out-soft) both;
+      animation-delay: calc(var(--intro-delay, 0ms) + var(--pv-delay, 0ms));
+    }
+  }
+
+  /* Hover / keyboard focus replays the line-art (fine pointers only). Declared after the intro so it wins. */
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .project-card:is(:hover, :has(:focus-visible)) {
+      translate: 0 -3px;
+    }
+
+    .project-card:is(:hover, :has(:focus-visible)) .project-visual > svg {
+      scale: 1.025;
+    }
+
+    .project-card:is(:hover, :has(:focus-visible)) .pv-draw {
+      animation: pv-draw 1100ms var(--ease-out-soft) var(--pv-delay, 0ms) both;
+    }
+
+    .project-card:is(:hover, :has(:focus-visible)) .pv-ping {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: pv-ping 640ms var(--ease-out-soft) var(--pv-delay, 0ms) both;
+    }
+
+    .project-card:is(:hover, :has(:focus-visible)) .pv-grow {
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      animation: pv-grow 700ms var(--ease-out-soft) var(--pv-delay, 0ms) both;
+    }
+
+    .project-card:is(:hover, :has(:focus-visible)) .pv-halo {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: pv-halo 1000ms ease-out var(--pv-delay, 0ms) both;
+    }
+
+    .project-card:is(:hover, :has(:focus-visible)) .pv-scan-x {
+      animation: pv-scan-x 1400ms cubic-bezier(0.45, 0, 0.25, 1) both;
+    }
+
+    .project-card:is(:hover, :has(:focus-visible)) .pv-scan-y {
+      animation: pv-scan-y 1400ms cubic-bezier(0.45, 0, 0.25, 1) both;
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+   * Case study page (pages/ProjectDetailPage.tsx)
+   * ----------------------------------------------------------------------- */
+
+  /* Header entrance, staggered with --enter-delay. */
+  @media (prefers-reduced-motion: no-preference) {
+    .cs-enter {
+      animation: cs-enter 760ms var(--ease-out-soft) both;
+      animation-delay: var(--enter-delay, 0ms);
+    }
+
+    .cs-enter-media {
+      animation: cs-enter-media 1000ms var(--ease-out-soft) both;
+      animation-delay: var(--enter-delay, 0ms);
+    }
+  }
+
+  /* Sections reveal once on scroll (`data-revealed` is set by React). */
+  .cs-reveal {
+    transition:
+      opacity 700ms var(--ease-out-soft),
+      transform 700ms var(--ease-out-soft);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cs-reveal[data-revealed="false"] {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  }
+
+  /* Architecture pipeline: nodes pop, connectors draw and a data packet travels once. */
+  .pipeline-packet {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pipeline[data-active="false"] .pipeline-node,
+    .pipeline[data-active="false"] .pipeline-card {
+      opacity: 0;
+    }
+
+    .pipeline[data-active="false"] .pipeline-line {
+      transform: scaleY(0);
+    }
+
+    .pipeline[data-active="true"] .pipeline-node {
+      animation: pipeline-node 520ms var(--ease-out-soft) both;
+      animation-delay: calc(var(--step, 0) * 240ms);
+    }
+
+    .pipeline[data-active="true"] .pipeline-card {
+      animation: pipeline-card 640ms var(--ease-out-soft) both;
+      animation-delay: calc(var(--step, 0) * 240ms + 80ms);
+    }
+
+    .pipeline[data-active="true"] .pipeline-line {
+      transform-origin: top;
+      animation: pipeline-line 520ms var(--ease-out-soft) both;
+      animation-delay: calc(var(--step, 0) * 240ms + 200ms);
+    }
+
+    .pipeline[data-active="true"] .pipeline-packet {
+      animation: pipeline-packet 900ms cubic-bezier(0.45, 0, 0.25, 1) both;
+      animation-delay: calc(var(--step, 0) * 240ms + 520ms);
+    }
+  }
+
+  /* Pager / related cards. */
+  .pager-card .project-visual > svg {
+    transition: scale 600ms var(--ease-out-soft);
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .pager-card:hover .project-visual > svg {
+      scale: 1.06;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Interactive card states — unlayered on purpose: Tailwind utilities (layer
+ * `utilities`) would otherwise win over `@layer components` for border-color
+ * and box-shadow.
+ * ------------------------------------------------------------------------- */
+.project-card:has(:focus-visible) {
+  border-color: rgb(46 107 203 / 0.45);
+  box-shadow: var(--shadow-lift);
+}
+
+.project-card[data-variant="spotlight"]:has(:focus-visible) {
+  box-shadow:
+    0 1px 2px rgb(19 34 63 / 0.05),
+    0 28px 60px -28px rgb(46 107 203 / 0.55);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-card:hover {
+    border-color: rgb(46 107 203 / 0.38);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .project-card[data-variant="spotlight"]:hover {
+    box-shadow:
+      0 1px 2px rgb(19 34 63 / 0.05),
+      0 28px 60px -28px rgb(46 107 203 / 0.55);
+  }
+
+  .project-card:hover::before,
+  .project-card:hover::after {
+    opacity: 1;
+  }
+}
+
+@keyframes pv-draw {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pv-draw-intro {
+  from {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes pv-ping {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.45);
+  }
+}
+
+/* Transform only: some pinged shapes carry their own opacity attribute. */
+@keyframes pv-ping-intro {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes pv-grow {
+  from {
+    transform: scaleY(0.25);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes pv-grow-intro {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes pv-halo {
+  0% {
+    opacity: 0.55;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+@keyframes pv-scan-x {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  12%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(212px);
+  }
+}
+
+@keyframes pv-scan-y {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  12%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(128px);
+  }
+}
+
+@keyframes project-filter-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cs-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes cs-enter-media {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+    clip-path: inset(6% 6% 6% 6% round 20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 0 0 round 20px);
+  }
+}
+
+@keyframes pipeline-node {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pipeline-card {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pipeline-line {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes pipeline-packet {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+  15%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}

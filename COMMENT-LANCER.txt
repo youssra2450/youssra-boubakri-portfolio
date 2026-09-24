@@ -1,0 +1,25 @@
+NOTE : COMMENT LANCER MON PORTFOLIO
+===================================
+
+LANCER
+  1. Ouvrir le dossier "youssera portfolio" (sur le Bureau).
+  2. Double-cliquer sur start.bat
+  3. Attendre environ 30 secondes : le navigateur s'ouvre tout seul.
+     Adresse du site : http://localhost:5173
+
+PENDANT L'UTILISATION
+  - Deux fenetres restent ouvertes : "Portfolio - API" et "Portfolio - Site".
+  - Les laisser ouvertes (si on les ferme, le site s'arrete).
+  - Ne pas cliquer a l'interieur de ces fenetres noires (ca peut les bloquer).
+
+ARRETER
+  - Double-cliquer sur stop.bat
+
+MODIFIER LE CONTENU (textes, projets...)
+  1. Modifier le fichier database\seed\portfolio.json
+  2. Double-cliquer sur update-content.bat
+  3. Actualiser la page du navigateur (F5)
+
+EN CAS DE PROBLEME
+  - Le site ne s'ouvre pas : double-cliquer sur stop.bat, puis a nouveau sur start.bat.
+  - Guide complet : docs\LANCER-LE-PROJET.md
