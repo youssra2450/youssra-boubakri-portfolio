@@ -252,8 +252,14 @@ def create_unavailable_app(error: Exception) -> FastAPI:
     return fallback
 
 
-try:
-    app = create_app()
-except Exception as startup_error:  # keep answering with a diagnostic rather than crashing
-    logger.exception("startup.failed")
-    app = create_unavailable_app(startup_error)
+def build_app() -> FastAPI:
+    """``create_app()``, or the diagnostic fallback if the application cannot start."""
+    try:
+        return create_app()
+    except Exception as startup_error:  # keep answering with a diagnostic rather than crashing
+        logger.exception("startup.failed")
+        return create_unavailable_app(startup_error)
+
+
+# A plain top-level assignment: hosting platforms (Vercel) detect the ASGI application from it.
+app = build_app()
