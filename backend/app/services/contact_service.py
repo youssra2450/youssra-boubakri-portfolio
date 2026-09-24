@@ -66,7 +66,7 @@ class ContactService:
                 email=str(payload.email),
                 subject=fields["subject"],
                 message=fields["message"],
-                ip_hash=hash_ip(client_ip, secret=self.settings.secret_key.get_secret_value()),
+                ip_hash=hash_ip(client_ip, secret=self.settings.ip_hash_salt),
                 user_agent=self._clean_user_agent(user_agent),
                 is_spam=is_spam,
             )

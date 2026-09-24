@@ -3,6 +3,7 @@
 import pytest
 from pydantic import ValidationError
 
+from app.core.config import EMBEDDED_DATABASE_URL
 from tests.support import EMAIL_ENABLED, make_settings
 
 PRODUCTION_SECRET = "Zr8v3kQm0PwLx2NcT6yHb9UdA4sE7fJg1WqRiOeKlMnB"
@@ -152,6 +153,8 @@ def test_vercel_defaults_to_production_behind_the_proxy(monkeypatch: pytest.Monk
     assert settings.environment == "production"
     assert settings.trust_proxy_headers is True
     assert settings.site_url == "https://portfolio.example.test"
+    assert settings.embedded_database is True  # no PostgreSQL connected yet
+    assert settings.database_url == EMBEDDED_DATABASE_URL
 
 
 def test_explicit_values_win_over_vercel_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -179,3 +182,43 @@ def test_vercel_defaults_are_ignored_elsewhere(monkeypatch: pytest.MonkeyPatch) 
 
     assert settings.environment == "development"
     assert settings.trust_proxy_headers is False
+
+
+def test_vercel_uses_the_connected_database_when_there_is_one(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.core.config import Settings
+
+    _clean_environment(monkeypatch)
+    monkeypatch.setenv("VERCEL", "1")
+    monkeypatch.setenv("DATABASE_URL", "postgresql://app:pw@neon.example.test/app")
+
+    settings = Settings(_env_file=None)  # type: ignore[call-arg]
+
+    assert settings.embedded_database is False
+    assert settings.database_url == "postgresql+psycopg://app:pw@neon.example.test/app"
+
+
+def test_embedded_database_can_be_enabled_explicitly(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.core.config import Settings
+
+    _clean_environment(monkeypatch)
+    monkeypatch.setenv("EMBEDDED_DATABASE", "true")
+
+    settings = Settings(_env_file=None)  # type: ignore[call-arg]
+
+    assert settings.embedded_database is True
+    assert settings.database_url == EMBEDDED_DATABASE_URL
+
+
+def test_missing_secret_key_is_replaced_by_a_random_value(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.core.config import Settings
+
+    _clean_environment(monkeypatch)
+    monkeypatch.delenv("SECRET_KEY")
+
+    first = Settings(_env_file=None)  # type: ignore[call-arg]
+    second = Settings(_env_file=None)  # type: ignore[call-arg]
+
+    assert first.secret_key_generated is True
+    assert len(first.ip_hash_salt) >= 32
+    assert first.ip_hash_salt != second.ip_hash_salt
+    assert make_settings().secret_key_generated is False

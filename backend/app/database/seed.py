@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
 from app.core.logging import configure_logging
-from app.core.paths import DOCKER_SEED_FILE, REPO_SEED_FILE
+from app.core.paths import BUNDLED_SEED_FILE, DOCKER_SEED_FILE, REPO_SEED_FILE
 from app.database.base import Base
 from app.database.session import build_engine, build_session_factory, session_scope
 from app.models import (
@@ -65,15 +65,17 @@ class SeedReport:
 
 
 def resolve_seed_file(settings: Settings) -> Path:
-    """``SEED_FILE`` if set, else the repository copy, else the copy baked into the Docker image."""
+    """``SEED_FILE`` if set, else the repository copy, else the copy bundled by the Vercel build, else the
+    copy baked into the Docker image."""
     if settings.seed_file is not None:
         if not settings.seed_file.is_file():
             raise FileNotFoundError(f"SEED_FILE does not exist: {settings.seed_file}")
         return settings.seed_file
-    for candidate in (REPO_SEED_FILE, DOCKER_SEED_FILE):
+    candidates = (REPO_SEED_FILE, BUNDLED_SEED_FILE, DOCKER_SEED_FILE)
+    for candidate in candidates:
         if candidate.is_file():
             return candidate
-    raise FileNotFoundError(f"Seed file not found (looked in {REPO_SEED_FILE} and {DOCKER_SEED_FILE})")
+    raise FileNotFoundError(f"Seed file not found (looked in {', '.join(map(str, candidates))})")
 
 
 def load_seed_data(path: Path) -> SeedData:

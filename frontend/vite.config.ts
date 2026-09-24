@@ -1,9 +1,39 @@
 /// <reference types="vitest/config" />
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath, URL } from "node:url";
 
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv, type Plugin } from "vite";
+
+const SEED_FILE = fileURLToPath(new URL("../database/seed/portfolio.json", import.meta.url));
+
+/**
+ * Static hosts without an SPA fallback (Vercel services) serve files only: emit a copy of index.html for
+ * every project page (`projects/<slug>/index.html`) and as `404.html`, so deep links load the app.
+ * Project slugs come from the seed file; when it is not reachable (e.g. the Docker build context) only
+ * `404.html` is emitted — nginx has its own fallback there.
+ */
+function spaRouteEntries(): Plugin {
+  return {
+    name: "spa-route-entries",
+    apply: "build",
+    enforce: "post",
+    generateBundle(_options, bundle) {
+      const entry = bundle["index.html"];
+      if (!entry || entry.type !== "asset") return;
+      const html = entry.source;
+      const slugs: string[] = existsSync(SEED_FILE)
+        ? (JSON.parse(readFileSync(SEED_FILE, "utf8")) as { projects?: { slug: string }[] }).projects?.map(
+            (project) => project.slug,
+          ) ?? []
+        : [];
+      for (const fileName of ["404.html", ...slugs.map((slug) => `projects/${slug}/index.html`)]) {
+        this.emitFile({ type: "asset", fileName, source: html });
+      }
+    },
+  };
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -15,7 +45,7 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [react(), tailwindcss()],
+    plugins: [react(), tailwindcss(), spaRouteEntries()],
     resolve: {
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),

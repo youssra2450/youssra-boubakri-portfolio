@@ -1,6 +1,7 @@
 """Application factory: settings, database, middleware, exception handlers and routers."""
 
 import logging
+import re
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from dataclasses import asdict
@@ -9,6 +10,7 @@ from typing import Any
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import ValidationError as PydanticValidationError
 from sqlalchemy import Engine
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session, sessionmaker
@@ -20,6 +22,7 @@ from app.core.config import Settings, get_settings
 from app.core.logging import configure_logging
 from app.core.openapi import API_DESCRIPTION, API_TITLE, OPENAPI_TAGS, install_openapi
 from app.core.rate_limit import InMemoryRateLimiter
+from app.database.embedded import prepare_embedded_database
 from app.database.session import build_engine, build_session_factory
 from app.middleware.body_limit import BodySizeLimitMiddleware
 from app.middleware.request_context import RequestContextMiddleware
@@ -65,6 +68,11 @@ def create_app(
     if session_factory is None:
         owned_engine = build_engine(settings.database_url)
         session_factory = build_session_factory(owned_engine)
+        if settings.embedded_database:
+            logger.warning("database=embedded (no DATABASE_URL): serving the seed content from SQLite")
+            prepare_embedded_database(owned_engine, settings)
+    if settings.secret_key_generated:
+        logger.warning("SECRET_KEY is not set: using a random per-process value")
 
     docs_enabled = settings.docs_enabled
     app = FastAPI(
@@ -213,4 +221,39 @@ def _error_message(error: dict[str, Any]) -> str:
     return message.removeprefix("Value error, ")
 
 
-app = create_app()
+_CREDENTIALS_IN_URL = re.compile(r"://[^@/\s]+@")
+
+
+def describe_startup_error(error: Exception) -> str:
+    """Short, secret-free description of why the application could not start."""
+    if isinstance(error, PydanticValidationError):
+        fields = sorted(
+            {".".join(str(part) for part in item["loc"]) or "settings" for item in error.errors()}
+        )
+        return f"invalid configuration ({', '.join(fields)})"
+    first_line = (str(error).splitlines() or [""])[0][:200]
+    return f"{type(error).__name__}: {_CREDENTIALS_IN_URL.sub('://***@', first_line)}".rstrip(": ")
+
+
+def create_unavailable_app(error: Exception) -> FastAPI:
+    """Fallback served when ``create_app`` fails: every request gets a 503 explaining the problem, instead
+    of the process crashing with an opaque platform error."""
+    reason = describe_startup_error(error)
+    fallback = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+
+    @fallback.api_route("/{path:path}", methods=["GET", "HEAD", "POST", "OPTIONS"], include_in_schema=False)
+    async def unavailable(path: str) -> JSONResponse:
+        return JSONResponse(
+            _error_body(f"The API could not start: {reason}", "startup_error"),
+            status_code=503,
+            headers={"Retry-After": "60"},
+        )
+
+    return fallback
+
+
+try:
+    app = create_app()
+except Exception as startup_error:  # keep answering with a diagnostic rather than crashing
+    logger.exception("startup.failed")
+    app = create_unavailable_app(startup_error)

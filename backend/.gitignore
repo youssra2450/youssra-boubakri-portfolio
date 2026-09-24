@@ -8,3 +8,6 @@ __pycache__/
 .coverage.*
 coverage.xml
 htmlcov/
+
+# Seed copy written by scripts/vercel_build.py for the embedded database
+bundled/

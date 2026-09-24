@@ -1,11 +1,13 @@
 """Application settings, read from environment variables and ``.env`` files (see docs/SPEC.md §2.1)."""
 
 import os
+import secrets
+import tempfile
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Literal
 
-from pydantic import AliasChoices, Field, SecretStr, field_validator, model_validator
+from pydantic import AliasChoices, Field, PrivateAttr, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.core.rate_limit import RateLimitRule
@@ -15,6 +17,12 @@ EmailProvider = Literal["none", "smtp", "resend"]
 LogLevel = Literal["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"]
 
 MIN_SECRET_KEY_LENGTH = 32
+
+#: SQLite file used by the embedded database (``/tmp`` is the only writable place on Vercel).
+EMBEDDED_DATABASE_URL = f"sqlite:///{(Path(tempfile.gettempdir()) / 'portfolio-embedded.sqlite3').as_posix()}"
+
+_DATABASE_URL_KEYS = frozenset({"database_url", "postgres_url"})
+_TRUE_VALUES = frozenset({"1", "true", "yes", "on"})
 
 #: Fragments that identify a documentation placeholder rather than a real secret.
 _PLACEHOLDER_SECRET_MARKERS = (
@@ -48,7 +56,13 @@ class Settings(BaseSettings):
         default="postgresql+psycopg://portfolio:portfolio@localhost:5432/portfolio",
         validation_alias=AliasChoices("database_url", "postgres_url"),
     )
-    secret_key: SecretStr = Field(description="Salt of the visitor IP hashes (at least 32 characters).")
+    #: Self-contained SQLite database created and filled from the seed file at startup (read-only
+    #: content). Default on Vercel when no PostgreSQL is connected, so the site works without setup.
+    embedded_database: bool = False
+    # When missing, a random per-process value is generated (it only salts visitor IP hashes).
+    secret_key: SecretStr | None = Field(
+        default=None, description="Salt of the visitor IP hashes (at least 32 characters)."
+    )
 
     cors_origins: str = "http://localhost:5173,http://localhost:4173,http://localhost:8080"
     site_url: str = "http://localhost:8080"
@@ -76,18 +90,29 @@ class Settings(BaseSettings):
     log_json: bool = False
     docs_enabled: bool = True
 
+    _secret_key_generated: bool = PrivateAttr(default=False)
+
     @model_validator(mode="before")
     @classmethod
-    def _vercel_defaults(cls, data: Any) -> Any:
+    def _platform_defaults(cls, data: Any) -> Any:
         """On Vercel (``VERCEL=1``), default to production behind Vercel's proxy, with the production domain
-        as ``SITE_URL``. Values set explicitly in the project's environment variables always win."""
-        if os.environ.get("VERCEL") != "1" or not isinstance(data, dict):
+        as ``SITE_URL``, and to the embedded database while no PostgreSQL is connected. Values set
+        explicitly in the environment always win."""
+        if not isinstance(data, dict):
             return data
-        defaults: dict[str, Any] = {"environment": "production", "trust_proxy_headers": True}
-        domain = os.environ.get("VERCEL_PROJECT_PRODUCTION_URL", "").strip()
-        if domain:
-            defaults["site_url"] = f"https://{domain}"
-        return {**defaults, **data}
+        database_configured = any(key.lower() in _DATABASE_URL_KEYS for key in data)
+        defaults: dict[str, Any] = {}
+        if os.environ.get("VERCEL") == "1":
+            defaults |= {"environment": "production", "trust_proxy_headers": True}
+            domain = os.environ.get("VERCEL_PROJECT_PRODUCTION_URL", "").strip()
+            if domain:
+                defaults["site_url"] = f"https://{domain}"
+            if not database_configured:
+                defaults["embedded_database"] = True
+        merged = {**defaults, **data}
+        if not database_configured and str(merged.get("embedded_database", "")).lower() in _TRUE_VALUES:
+            merged["database_url"] = EMBEDDED_DATABASE_URL
+        return merged
 
     @field_validator("environment", "email_provider", mode="before")
     @classmethod
@@ -121,6 +146,12 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _validate_secret_key(self) -> "Settings":
+        if self.secret_key is None:
+            # Not configured: a strong random salt for this process (hashes are then not stable across
+            # restarts, which only affects rate limiting). main.py logs a warning.
+            self.secret_key = SecretStr(secrets.token_urlsafe(48))
+            self._secret_key_generated = True
+            return self
         secret = self.secret_key.get_secret_value()
         if len(secret) < MIN_SECRET_KEY_LENGTH:
             raise ValueError(f"SECRET_KEY must be at least {MIN_SECRET_KEY_LENGTH} characters long")
@@ -134,6 +165,16 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.environment == "production"
+
+    @property
+    def ip_hash_salt(self) -> str:
+        """``SECRET_KEY`` value (always set once validated)."""
+        return self.secret_key.get_secret_value() if self.secret_key is not None else ""
+
+    @property
+    def secret_key_generated(self) -> bool:
+        """``SECRET_KEY`` was not configured and a random value is used instead."""
+        return self._secret_key_generated
 
     @property
     def cors_origin_list(self) -> list[str]:

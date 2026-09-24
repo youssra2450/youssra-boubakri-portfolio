@@ -15,7 +15,7 @@
     { "source": "/api/(.*)", "destination": { "service": "backend" } },
     { "source": "/robots.txt", "destination": { "service": "backend" } },
     { "source": "/sitemap.xml", "destination": { "service": "backend" } },
-    { "source": "/projects/(.*)", "destination": { "service": "frontend", "path": "/index.html" } },
+    { "source": "/projects/(.*)", "destination": { "service": "frontend", "path": "/" } },
     { "source": "/(.*)", "destination": { "service": "frontend" } }
   ],
   "headers": [
