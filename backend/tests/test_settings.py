@@ -1,7 +1,5 @@
 """Settings validation and derived values."""
 
-from pathlib import Path
-
 import pytest
 from pydantic import ValidationError
 
@@ -98,7 +96,7 @@ def test_blank_values_are_treated_as_missing() -> None:
     assert settings.missing_email_settings == ["EMAIL_TO"]
 
 
-def test_environment_variables_are_read(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_environment_variables_are_read(monkeypatch: pytest.MonkeyPatch) -> None:
     from app.core.config import Settings
 
     monkeypatch.setenv("SECRET_KEY", PRODUCTION_SECRET)
@@ -109,3 +107,75 @@ def test_environment_variables_are_read(monkeypatch: pytest.MonkeyPatch, tmp_pat
 
     assert settings.email_provider == "none"
     assert settings.docs_enabled is False
+
+
+_VERCEL_VARIABLES = (
+    "VERCEL",
+    "VERCEL_PROJECT_PRODUCTION_URL",
+    "ENVIRONMENT",
+    "SITE_URL",
+    "TRUST_PROXY_HEADERS",
+)
+
+
+def _clean_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    for name in (*_VERCEL_VARIABLES, "DATABASE_URL", "POSTGRES_URL"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("SECRET_KEY", PRODUCTION_SECRET)
+
+
+def test_postgres_url_is_a_fallback_for_database_url(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.core.config import Settings
+
+    _clean_environment(monkeypatch)
+    monkeypatch.setenv("POSTGRES_URL", "postgres://user:pw@db.example.test/neondb?sslmode=require")
+
+    settings = Settings(_env_file=None)  # type: ignore[call-arg]
+
+    assert settings.database_url == "postgresql+psycopg://user:pw@db.example.test/neondb?sslmode=require"
+
+    monkeypatch.setenv("DATABASE_URL", "postgresql://app:pw@primary.example.test/app")
+    preferred = Settings(_env_file=None)  # type: ignore[call-arg]
+
+    assert preferred.database_url == "postgresql+psycopg://app:pw@primary.example.test/app"
+
+
+def test_vercel_defaults_to_production_behind_the_proxy(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.core.config import Settings
+
+    _clean_environment(monkeypatch)
+    monkeypatch.setenv("VERCEL", "1")
+    monkeypatch.setenv("VERCEL_PROJECT_PRODUCTION_URL", "portfolio.example.test")
+
+    settings = Settings(_env_file=None)  # type: ignore[call-arg]
+
+    assert settings.environment == "production"
+    assert settings.trust_proxy_headers is True
+    assert settings.site_url == "https://portfolio.example.test"
+
+
+def test_explicit_values_win_over_vercel_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.core.config import Settings
+
+    _clean_environment(monkeypatch)
+    monkeypatch.setenv("VERCEL", "1")
+    monkeypatch.setenv("VERCEL_PROJECT_PRODUCTION_URL", "portfolio.example.test")
+    monkeypatch.setenv("SITE_URL", "https://www.custom-domain.test/")
+    monkeypatch.setenv("ENVIRONMENT", "development")
+
+    settings = Settings(_env_file=None)  # type: ignore[call-arg]
+
+    assert settings.site_url == "https://www.custom-domain.test"
+    assert settings.environment == "development"
+
+
+def test_vercel_defaults_are_ignored_elsewhere(monkeypatch: pytest.MonkeyPatch) -> None:
+    from app.core.config import Settings
+
+    _clean_environment(monkeypatch)
+    monkeypatch.setenv("VERCEL_PROJECT_PRODUCTION_URL", "portfolio.example.test")
+
+    settings = Settings(_env_file=None)  # type: ignore[call-arg]
+
+    assert settings.environment == "development"
+    assert settings.trust_proxy_headers is False

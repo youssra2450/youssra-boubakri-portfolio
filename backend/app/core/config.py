@@ -1,10 +1,11 @@
 """Application settings, read from environment variables and ``.env`` files (see docs/SPEC.md §2.1)."""
 
+import os
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
-from pydantic import Field, SecretStr, field_validator, model_validator
+from pydantic import AliasChoices, Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.core.rate_limit import RateLimitRule
@@ -42,7 +43,11 @@ class Settings(BaseSettings):
     app_name: str = "portfolio-api"
     app_version: str = "1.0.0"
 
-    database_url: str = "postgresql+psycopg://portfolio:portfolio@localhost:5432/portfolio"
+    # POSTGRES_URL is accepted as a fallback (name used by some Vercel database integrations).
+    database_url: str = Field(
+        default="postgresql+psycopg://portfolio:portfolio@localhost:5432/portfolio",
+        validation_alias=AliasChoices("database_url", "postgres_url"),
+    )
     secret_key: SecretStr = Field(description="Salt of the visitor IP hashes (at least 32 characters).")
 
     cors_origins: str = "http://localhost:5173,http://localhost:4173,http://localhost:8080"
@@ -70,6 +75,19 @@ class Settings(BaseSettings):
     log_level: LogLevel = "INFO"
     log_json: bool = False
     docs_enabled: bool = True
+
+    @model_validator(mode="before")
+    @classmethod
+    def _vercel_defaults(cls, data: Any) -> Any:
+        """On Vercel (``VERCEL=1``), default to production behind Vercel's proxy, with the production domain
+        as ``SITE_URL``. Values set explicitly in the project's environment variables always win."""
+        if os.environ.get("VERCEL") != "1" or not isinstance(data, dict):
+            return data
+        defaults: dict[str, Any] = {"environment": "production", "trust_proxy_headers": True}
+        domain = os.environ.get("VERCEL_PROJECT_PRODUCTION_URL", "").strip()
+        if domain:
+            defaults["site_url"] = f"https://{domain}"
+        return {**defaults, **data}
 
     @field_validator("environment", "email_provider", mode="before")
     @classmethod

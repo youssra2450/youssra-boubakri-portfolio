@@ -9,6 +9,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const apiTarget = env.VITE_DEV_API_TARGET || "http://localhost:8000";
 
+  // On Vercel, default the public site URL (canonical, Open Graph, JSON-LD) to the production domain.
+  if (!env.VITE_SITE_URL && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    process.env.VITE_SITE_URL = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+
   return {
     plugins: [react(), tailwindcss()],
     resolve: {

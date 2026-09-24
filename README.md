@@ -426,7 +426,23 @@ LF elsewhere).
 
 ## Deployment
 
-### Option A — a single VPS with Docker Compose and HTTPS (recommended)
+### Vercel — site + API in one project (live setup)
+
+The root [`vercel.json`](vercel.json) declares two Vercel **Services**: `frontend` (Vite, served on `/`) and
+`backend` (FastAPI, `app.main:app`, served on `/api`, plus `/robots.txt` and `/sitemap.xml`). A Neon
+PostgreSQL database connected from the Vercel dashboard provides `DATABASE_URL`.
+
+- Only `SECRET_KEY` has to be set by hand. On Vercel (`VERCEL=1`) the backend defaults to
+  `ENVIRONMENT=production`, `TRUST_PROXY_HEADERS=true` and `SITE_URL=https://$VERCEL_PROJECT_PRODUCTION_URL`;
+  the frontend build derives `VITE_SITE_URL` the same way. Explicit variables always win.
+- The backend build hook (`[tool.vercel.scripts] build` in `backend/pyproject.toml` →
+  `backend/scripts/vercel_build.py`) runs `alembic upgrade head` on the direct (unpooled) connection and reloads
+  `database/seed/portfolio.json` on every deployment, so editing the JSON and pushing updates the live site.
+  Without a database the step is skipped and the deployment still succeeds.
+
+Step-by-step guide (French): [`docs/DEPLOYER-SUR-VERCEL.md`](docs/DEPLOYER-SUR-VERCEL.md).
+
+### Option A — a single VPS with Docker Compose and HTTPS
 
 1. Install Docker on the server, then clone the repository.
 2. `cp .env.example .env` and set `ENVIRONMENT=production`, a random `SECRET_KEY`, a strong

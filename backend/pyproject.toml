@@ -3,6 +3,27 @@ name = "portfolio-api"
 version = "1.0.0"
 description = "REST API powering Youssra Boubakri's professional portfolio (FastAPI + PostgreSQL)."
 requires-python = ">=3.10"
+# Same pins as requirements.txt (used by pip, Docker and the launcher); Vercel installs from this list.
+# tests/test_packaging.py fails if the two drift apart.
+dependencies = [
+    "fastapi==0.141.1",
+    "uvicorn[standard]==0.53.0",
+    "sqlalchemy==2.0.54",
+    "alembic==1.20.0",
+    "psycopg[binary]==3.3.6",
+    "pydantic==2.13.5",
+    "pydantic-settings==2.15.0",
+    "email-validator==2.3.0",
+    "httpx==0.28.1",
+]
+
+# ---- Vercel (backend service of the root vercel.json) ------------------------------------------------------
+[tool.vercel]
+entrypoint = "app.main:app"
+
+[tool.vercel.scripts]
+# Migrates the database and reloads database/seed/portfolio.json on every deployment.
+build = "python -m scripts.vercel_build"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
